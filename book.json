@@ -1,6 +1,7 @@
 {
     "language": "en"
     "plugins": ["gist", "styles-sass"],
+    "readme": "intro.adoc",
     "styles": {
         "website": "styles/website.scss",
         "pdf": "./styles/pdf.scss"
