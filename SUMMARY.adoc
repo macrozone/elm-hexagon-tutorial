@@ -1,3 +1,4 @@
 # Summary
 
-* [First Chapter](chapter1.md)
+. link:chapter1.adoc[Chapter 1]
+
