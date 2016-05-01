@@ -1,3 +1,6 @@
 {
-    "plugins": ["gist"]
+    "plugins": ["gist", "styles-sass"],
+    "styles": {
+        "pdf": "./styles/pdf.scss"
+    }
 }
