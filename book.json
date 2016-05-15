@@ -1,5 +1,5 @@
 {
-    "language": "en"
+    "language": "en",
     "plugins": ["gist", "styles-sass"],
     "readme": "doc/0-intro.adoc",
     "styles": {

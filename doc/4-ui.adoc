@@ -1,0 +1,5 @@
+UI
+--
+
+Up next are the UI elements: The text messages at the beginning and end of the game and the
+clock at the top left of the screen.

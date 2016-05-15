@@ -1,0 +1,5 @@
+Enemies
+-------
+
+In the original game the shape of the enemies are defined in a large class and they are
+created in waves. For this tutorial we keep it simpler. The enemies are created randomly on the fly.

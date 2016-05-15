@@ -1,0 +1,5 @@
+Music and Bass Shake
+--------------------
+
+In Hexagon, the music is an important element of the game. It is even part of the game mechanics:
+Whenever there is a bass sequence, the whole stage is shaking.

@@ -1,5 +1,11 @@
-# Summary
+Summary
+-------
 
 . link:0-intro.adoc[Introduction]
 . link:1-controls.adoc[Controls]
-
+. link:2-dancefloor.adoc[Board]
+. link:3-enemies.adoc[Enemies]
+. link:4-ui.adoc[UI]
+. link:5-collision_detection.adoc[Collision Detection]
+. link:6-music.adoc[Music]
+. link:7-wrap_up.adoc[Wrap-Up]
