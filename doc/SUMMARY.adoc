@@ -1,4 +1,5 @@
 # Summary
 
 . link:0-intro.adoc[Introduction]
+. link:1-controls.adoc[Controls]
 
