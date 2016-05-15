@@ -1,0 +1,4 @@
+Game Controls
+-------------
+
+We start off by creating the ship. The left and right arrow keys are used to move it along the periphery of an imaginary circle.
