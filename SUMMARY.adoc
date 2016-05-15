@@ -1,4 +1,4 @@
 # Summary
 
-. link:doc/0-chapter1.adoc[Chapter 1]
+. link:doc/0-intro.adoc[Chapter 1]
 
