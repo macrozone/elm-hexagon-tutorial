@@ -1,4 +1,4 @@
 # Summary
 
-. link:doc/0-intro.adoc[Introduction]
+. link:0-intro.adoc[Introduction]
 
