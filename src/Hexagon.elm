@@ -116,11 +116,15 @@ updateAutoRotateSpeed {progress, autoRotateSpeed} =
 
 
 updatePlayer: Input -> Game -> Player
-updatePlayer {dir} {player} =
-  let
-    newAngle = updatePlayerAngle player.angle dir
-  in
-    { player | angle = newAngle }
+updatePlayer {dir} {player, state} =
+  if state == Play then
+    let
+      newAngle = if state == NewGame then degrees 30 else 
+        Debug.watch "Player angle" (updatePlayerAngle player.angle -dir)
+    in
+      { player | angle = newAngle }
+  else
+    player
 
 updateEnemies: Game -> List(Enemy)
 updateEnemies game =
