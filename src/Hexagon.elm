@@ -6,8 +6,10 @@ import Window
 import Graphics.Collage exposing (..)
 import Graphics.Element exposing (..)
 import Color exposing (..)
+import Debug
 
 -- MODEL
+type State = NewGame | Play | GameOver
 
 type alias Player =
   { angle: Float }
@@ -20,6 +22,8 @@ type alias Input =
 type alias Game =
   { 
     player : Player
+  , state : State
+  , progress : Int
   }
 
 (gameWidth, gameHeight) = (1024, 576) -- 16:9
@@ -35,6 +39,8 @@ defaultGame : Game
 defaultGame =
   { 
     player = Player (degrees 30)
+  , state = NewGame
+  , progress = 0
   }
 
 -- UPDATE
@@ -51,6 +57,20 @@ updatePlayerAngle angle dir =
     else
       newAngle
 
+updateState: Input -> Game -> State
+updateState input game =
+  case game.state of
+    NewGame -> Play
+    Play -> Play
+    GameOver -> NewGame
+
+updateProgress: Game -> Int
+updateProgress {state,progress} =
+  case state of
+    NewGame -> 0
+    Play -> progress + 1
+    _ -> progress
+
 updatePlayer: Input -> Game -> Player
 updatePlayer {dir} {player} =
   let
@@ -64,6 +84,8 @@ update (timestamp, input) game =
  
   { game |
       player = updatePlayer input game
+    , state = updateState input game
+    , progress = Debug.watch "progress" (updateProgress game)
   }
 
 -- VIEW
