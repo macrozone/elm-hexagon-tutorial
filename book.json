@@ -1,7 +1,7 @@
 {
     "language": "en",
     "plugins": ["gist", "styles-sass", "codesnippet"],
-    "readme": "doc/0-intro.adoc",
+    "readme": "doc/intro.adoc",
     "styles": {
         "website": "styles/website.scss",
         "pdf": "./styles/pdf.scss"
