@@ -15,14 +15,22 @@ type State = NewGame | Play | GameOver
 type alias Player =
   { angle: Float }
 
+type alias Enemy = 
+  { radius : Float
+  , parts : List(Bool)
+  }
+
 type alias Input =
   { space : Bool
   , dir : Int
   }
 
+
 type alias Game =
   { 
     player : Player
+  , enemies: List(Enemy)
+  , enemySpeed: Float
   , state : State
   , progress : Int
   , autoRotateAngle : Float
@@ -42,12 +50,16 @@ type alias Colors =
 playerRadius : Float
 playerRadius = gameWidth / 10.0
 
+enemyThickness = 30
+
 -- The global game state
 
 defaultGame : Game
 defaultGame =
   { 
     player = Player (degrees 30)
+  , enemies = []
+  , enemySpeed = 0.0
   , state = NewGame
   , progress = 0
   , autoRotateAngle = 0.0
@@ -99,12 +111,41 @@ updatePlayer {dir} {player} =
   in
     { player | angle = newAngle }
 
+updateEnemies: Game -> List(Enemy)
+updateEnemies game =
+  let
+    enemyDistance = 300
+    partsFor index = 
+      case index of
+        0 -> [True, True, True, False, True, True]
+        1 -> [True, True, True, False, True, True]
+        2 -> [False, True, False, True, True, True]
+        3 -> [False, True, True, True, True, True]
+        _ -> [True, False, True, True, True, True]
+    radiusFor index = 
+      toFloat (enemyThickness + (iHalfWidth + round (( enemyDistance * (toFloat index)) - (toFloat game.progress) * game.enemySpeed)) % (enemyDistance * 5))
+  in
+   [
+      {parts = partsFor 0, radius = radiusFor 0}
+    , {parts = partsFor 1, radius = radiusFor 1}
+    , {parts = partsFor 2, radius = radiusFor 2}
+    , {parts = partsFor 3, radius = radiusFor 3}
+    , {parts = partsFor 4, radius = radiusFor 4}
+    ]
+
+updateEnemySpeed: Game -> Float
+updateEnemySpeed game = 
+  2 + (toFloat game.progress)/1000
+ 
+
 -- Game loop: Transition from one state to the next.
 update : (Time, Input) -> Game -> Game
 update (timestamp, input) game =
  
   { game |
       player = updatePlayer input game
+    , enemies = updateEnemies game
+    , enemySpeed = updateEnemySpeed game
     , state =  Debug.watch "state" (updateState input game)
     , progress = Debug.watch "progress" (updateProgress game)
     , autoRotateAngle = updateAutoRotateAngle game
@@ -130,6 +171,37 @@ makePlayer player =
       |> filled (hsl angle 1 0.5)
       |> moveRadial angle (playerRadius - 10)
       |> rotate angle
+
+trapezoid: Float -> Float -> Color -> Form
+trapezoid base height color =
+  let
+    s = height/(tan <| degrees 60)
+  in
+    filled color <| polygon [
+      (-base/2, 0), (base/2, 0), (base/2-s, height), (-base/2+s, height)
+    ]
+
+
+makeEnemy : Color -> Enemy -> Form
+makeEnemy color enemy =
+  let
+    base = 2.0 * (enemy.radius +enemyThickness) / (sqrt 3)
+    makeEnemyPart : Int -> Form
+    makeEnemyPart index = 
+      trapezoid base enemyThickness color 
+        |> rotate (degrees <| toFloat (90 + index * 60)) 
+        |> moveRadial (degrees <| toFloat (index * 60)) (enemy.radius +enemyThickness)
+
+    -- color = (hsl (radius/100) 1 0.5)
+  in
+    group
+      (indexedMap (,) enemy.parts |> filter snd |> map fst |> map makeEnemyPart)
+
+makeEnemies : Color -> List(Enemy) -> List(Form)
+makeEnemies color enemys =
+  map (makeEnemy color) enemys 
+
+
 
 hexagonElement: Int -> List((Float, Float))
 hexagonElement i =
@@ -194,6 +266,7 @@ view (w, h) game =
         , group (append
           [ makeField colors
           , makePlayer game.player
+          , group <| makeEnemies colors.bright game.enemies
           ]
           (makeCenterHole colors game)
         )
