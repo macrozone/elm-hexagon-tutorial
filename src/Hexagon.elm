@@ -84,7 +84,7 @@ update (timestamp, input) game =
  
   { game |
       player = updatePlayer input game
-    , state = updateState input game
+    , state =  Debug.watch "state" (updateState input game)
     , progress = Debug.watch "progress" (updateProgress game)
   }
 
