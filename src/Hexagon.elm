@@ -9,7 +9,7 @@ import Graphics.Element exposing (..)
 import Color exposing (..)
 import Debug
 import Text
-
+import String exposing (padLeft)
 
 -- MODEL
 type State = NewGame | Starting | Play | Pause | GameOver
@@ -287,11 +287,24 @@ makeTextBox f string =
     |> f
     |> leftAligned
 
+formatTime : Time -> String
+formatTime running =
+  let
+    centiseconds = floor (Time.inMilliseconds running / 10)
+    seconds = centiseconds // 100
+    centis = centiseconds % 100
+  in
+    padLeft 3 '0' (toString seconds) ++ "." ++ padLeft 2 '0' (toString centis)
+
+
 view : (Int,Int) -> Game -> Element
 view (w, h) game =
   let
     colors = makeColors game.progress
     startMessage = "SPACE to start, &larr;&rarr; to move"
+    score =
+      formatTime game.timeRunning
+      |> makeTextBox (Text.height 50)
     message = makeTextBox (Text.height 50) <| 
       case game.state of
         GameOver -> "Game Over"
@@ -312,6 +325,8 @@ view (w, h) game =
         |> rotate game.autoRotateAngle
       , toForm message 
         |> move (0, 40)
+      , toForm score
+          |> move (100 - halfWidth, halfHeight - 40)
       , toForm (
           if game.state == Play then spacer 1 1 else makeTextBox identity startMessage)
           |> move (0, 40 - halfHeight)
