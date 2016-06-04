@@ -26,7 +26,8 @@ type alias Game =
   , state : State
   , progress : Int
   , timeStart : Time
-  , timeRunning : Time
+  , timeTick : Time
+  , msRunning : Float
   , autoRotateAngle : Float
   , autoRotateSpeed : Float
   }
@@ -53,6 +54,8 @@ defaultGame =
   , state = NewGame
   , progress = 0
   , timeStart = 0.0
+  , timeTick = 0.0
+  , msRunning = 0.0
   , timeRunning = 0.0
   , autoRotateAngle = 0.0
   , autoRotateSpeed = 0.0
@@ -86,12 +89,12 @@ updateProgress {state,progress} =
     Play -> progress + 1
     _ -> progress
 
-updateTimeRunning: Time -> Game -> Time
-updateTimeRunning timestamp game = 
+updateMsRunning: Time -> Game -> Time
+updateMsRunning timestamp game = 
   case game.state of
-    Play -> (timestamp - game.timeStart)
-    GameOver -> game.timeRunning
-    _ -> 0.0
+    Play -> game.msRunning + timestamp - game.timeTick 
+    NewGame -> 0.0
+    _ -> game.msRunning
 
 updateAutoRotateAngle: Game -> Float
 updateAutoRotateAngle {autoRotateAngle, autoRotateSpeed} =
@@ -118,7 +121,8 @@ update (timestamp, input) game =
     , state =  Debug.watch "state" (updateState input game)
     , progress = Debug.watch "progress" (updateProgress game)
     , timeStart = Debug.watch "timeStart" (if game.state == NewGame then timestamp else game.timeStart)
-    , timeRunning = Debug.watch "timeRunning" (updateTimeRunning timestamp game)
+    , timeTick = timestamp
+    , msRunning = Debug.watch "msRunning" (updateMsRunning timestamp game)
     , autoRotateAngle = updateAutoRotateAngle game
     , autoRotateSpeed = updateAutoRotateSpeed game
   }
