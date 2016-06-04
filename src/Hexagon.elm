@@ -35,6 +35,8 @@ type alias Game =
   , enemySpeed: Float
   , state : State
   , progress : Int
+  , timeStart : Time
+  , timeRunning : Time
   , autoRotateAngle : Float
   , autoRotateSpeed : Float
   }
@@ -64,6 +66,8 @@ defaultGame =
   , enemySpeed = 0.0
   , state = NewGame
   , progress = 0
+  , timeStart = 0.0
+  , timeRunning = 0.0
   , autoRotateAngle = 0.0
   , autoRotateSpeed = 0.0
   }
@@ -105,6 +109,13 @@ updateProgress {state,progress} =
     Play -> progress + 1
     _ -> progress
 
+updateTimeRunning: Time -> Game -> Time
+updateTimeRunning timestamp game = 
+  case game.state of
+    Play -> (timestamp - game.timeStart)
+    GameOver -> game.timeRunning
+    _ -> 0.0
+
 updateAutoRotateAngle: Game -> Float
 updateAutoRotateAngle {autoRotateAngle, autoRotateSpeed} =
   autoRotateAngle + autoRotateSpeed
@@ -113,7 +124,6 @@ updateAutoRotateSpeed: Game -> Float
 updateAutoRotateSpeed {progress, autoRotateSpeed} =
   0.02 * sin (toFloat progress * 0.005 |> Debug.watch "φ")
   |> Debug.watch "autoRotateSpeed"
-
 
 updatePlayer: Input -> Game -> Player
 updatePlayer {dir} {player, state} =
@@ -151,18 +161,18 @@ updateEnemies game =
 updateEnemySpeed: Game -> Float
 updateEnemySpeed game = 
   Debug.watch "enemy speed" (2 + (toFloat game.progress)/1000)
- 
 
 -- Game loop: Transition from one state to the next.
 update : (Time, Input) -> Game -> Game
 update (timestamp, input) game =
- 
   { game |
       player = updatePlayer input game
     , enemies = updateEnemies game
     , enemySpeed = updateEnemySpeed game
     , state =  Debug.watch "state" (updateState input game)
     , progress = Debug.watch "progress" (updateProgress game)
+    , timeStart = Debug.watch "timeStart" (if game.state == NewGame then timestamp else game.timeStart)
+    , timeRunning = Debug.watch "timeRunning" (updateTimeRunning timestamp game)
     , autoRotateAngle = updateAutoRotateAngle game
     , autoRotateSpeed = updateAutoRotateSpeed game
   }
