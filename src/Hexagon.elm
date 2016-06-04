@@ -9,7 +9,8 @@ import Graphics.Element exposing (..)
 import Color exposing (..)
 import Debug
 import Text
-
+import Audio
+import Music
 
 -- MODEL
 type State = NewGame | Starting | Play | Pause | GameOver
@@ -37,6 +38,7 @@ type alias Game =
   , progress : Int
   , autoRotateAngle : Float
   , autoRotateSpeed : Float
+  , hasBass : Bool
   }
 
 type alias Colors =
@@ -54,6 +56,30 @@ playerRadius = gameWidth / 10.0
 
 enemyThickness = 30
 
+beat = 120.0 |> bpm
+beatAmplitude = 0.06
+
+-- Calculate Beat Per Minute
+bpm : Float -> Float
+bpm beat =
+  (2.0 * pi * beat / 3600 )
+
+handleAudio : Game -> Audio.Action
+handleAudio game =
+  case game.state of
+    Play -> Audio.Play
+    Starting -> Audio.Seek 0
+    _ -> Audio.Pause
+
+propertiesHandler : Audio.Properties -> Maybe Audio.Action
+propertiesHandler properties = Nothing
+
+music : Signal (Audio.Event, Audio.Properties)
+music = Audio.audio { src = "music/music.mp3",
+                      triggers = Audio.defaultTriggers,
+                      propertiesHandler = propertiesHandler,
+                      actions = Signal.map handleAudio gameState }
+
 -- The global game state
 
 defaultGame : Game
@@ -66,6 +92,7 @@ defaultGame =
   , progress = 0
   , autoRotateAngle = 0.0
   , autoRotateSpeed = 0.0
+  , hasBass = False
   }
 
 -- UPDATE
@@ -297,6 +324,12 @@ makeTextBox f string =
     |> Text.monospace
     |> f
     |> leftAligned
+beatPulse : Game -> Form -> Form
+beatPulse game =
+  if game.hasBass then
+    scale (1 + beatAmplitude * (beat * toFloat game.progress |> sin))
+  else
+    identity
 
 view : (Int,Int) -> Game -> Element
 view (w, h) game =
@@ -321,6 +354,7 @@ view (w, h) game =
           (makeCenterHole colors game)
         )
         |> rotate game.autoRotateAngle
+        |> beatPulse game
       , toForm message 
         |> move (0, 40)
       , toForm (
