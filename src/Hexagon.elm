@@ -24,6 +24,8 @@ type alias Game =
     player : Player
   , state : State
   , progress : Int
+  , timeStart : Time
+  , timeRunning : Time
   }
 
 (gameWidth, gameHeight) = (1024, 576) -- 16:9
@@ -41,6 +43,8 @@ defaultGame =
     player = Player (degrees 30)
   , state = NewGame
   , progress = 0
+  , timeStart = 0.0
+  , timeRunning = 0.0
   }
 
 -- UPDATE
@@ -71,6 +75,13 @@ updateProgress {state,progress} =
     Play -> progress + 1
     _ -> progress
 
+updateTimeRunning: Time -> Game -> Time
+updateTimeRunning timestamp game = 
+  case game.state of
+    Play -> (timestamp - game.timeStart)
+    GameOver -> game.timeRunning
+    _ -> 0.0
+
 updatePlayer: Input -> Game -> Player
 updatePlayer {dir} {player} =
   let
@@ -78,14 +89,16 @@ updatePlayer {dir} {player} =
   in
     { player | angle = newAngle }
 
+
 -- Game loop: Transition from one state to the next.
 update : (Time, Input) -> Game -> Game
 update (timestamp, input) game =
- 
   { game |
       player = updatePlayer input game
     , state =  Debug.watch "state" (updateState input game)
     , progress = Debug.watch "progress" (updateProgress game)
+    , timeStart = Debug.watch "timeStart" (if game.state == NewGame then timestamp else game.timeStart)
+    , timeRunning = Debug.watch "timeRunning" (updateTimeRunning timestamp game)
   }
 
 -- VIEW
