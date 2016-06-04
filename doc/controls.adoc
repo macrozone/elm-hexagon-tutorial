@@ -3,3 +3,5 @@ Controls
 
 We start off by creating the ship. It is controlled by the left and right arrow keys and moves
 on the periphery of an imaginary circle.
+
+{% codesnippet "https://raw.githubusercontent.com/sbaechler/polygon/master/src/Hexagon.elm", lines="76:89", language="elm" %}{% endcodesnippet %}
