@@ -1,14 +1,6 @@
+# Elm Game Tutorial
 
-# hexagon
+This is the code and documentation for the Hexagon game tutorial in Elm.
 
-## Development
 
-Start local server in root directory:
 
-    elm reactor
-
-Build project:
-
-    npm run build
-
-Navigate to <http://localhost:8000> .

@@ -1,0 +1,14 @@
+:source-highlighter: highlight.js
+
+Summary
+-------
+
+. link:doc/intro.adoc[Introduction]
+. link:doc/controls.adoc[Controls]
+. link:doc/gameloop.adoc[Game Loop]
+. link:doc/dancefloor.adoc[Board]
+. link:doc/enemies.adoc[Enemies]
+. link:doc/ui.adoc[UI]
+. link:doc/collision_detection.adoc[Collision Detection]
+. link:doc/music.adoc[Music]
+. link:doc/wrap_up.adoc[Wrap-Up]

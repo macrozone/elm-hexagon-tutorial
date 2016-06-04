@@ -1,0 +1,86 @@
+The Scene
+---------
+
+The board is made out of six triangles that touch in the center. They are alternating dark and light.
+The whole scene is going to rotate around the center point as well.
+
+## Imports
+We need the List module.
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="3:3", language="elm" %}{% endcodesnippet %}
+
+
+
+## Models
+First, we define the colors for the game in the model section. They are defined in the HSL color
+model (Hue, Saturation, Luminance). This is because all colors use the same hue
+and saturation values. They only differ in the luminance levels.
+The three colors are "dark", "medium" and "light". Notice that the color values are not
+defined yet. This is done dynamically in the view section.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="32:36", language="elm" %}{% endcodesnippet %}
+
+The board is going to rotate. Therefore the we add the two values `autoRotateAngle`
+and `autoRotateSpeed` to the Game type and the initial game object:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="23:30", language="elm" %}{% endcodesnippet %}
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="38:55", language="elm" %}{% endcodesnippet %}
+
+## Creating the board
+The board is made of two elements: Six triangles in alternating dark and bright
+color and a center hexagon.
+
+First, we create the function that calculates the color values. It takes the progress
+as an input and returns a `Colors` object which contains the values for the three colors.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="187:196" %}{% endcodesnippet %}
+
+A triangle is defined by its three corner points. Each point is a tuple of floats.
+One point in every triangle is the center point (0, 0). The other two points are
+calculated using simple trigonometry. The radius depends on the canvas size.
+Its length is √2 * screen width. This way the triangles always cover the whole
+field.
+
+The field itself consists of a group of Forms. Firstly we define two helper
+functions: `color` returns alternating `dark` or `medium`.
+`poly` creates a filled polygon from the triangle points and the color.
+
+Then we create an array of
+six elements (`[0..5]`) and use `map` to create the polygons using the helper functions.
+
+The following functions are placed in the view section:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="134:158" %}{% endcodesnippet %}
+
+The center element is a hexagon that has a dark fill color and a light outline.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="172:185" %}{% endcodesnippet %}
+
+
+Now we can draw the element. We define the new colors in the let block of the view function.
+Then we can add the new elements and pass the whole group to a (yet empty) rotate function.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="184:201" %}{% endcodesnippet %}
+
+
+## Adding Rotation
+
+Compared to the original game, the rotation in this version is much simpler. The rotation is
+defined with a sinus function. So it starts rotating in one direction, gets faster, then after
+having reached a maximum it gets slower until it rotates the other way. And so forth.
+
+To accomplish this we have to modify the angle that is passed to the `rotate` function.
+That's why we added the two values `autoRotateAngle` and `autoRotateSpeed` to the Game object.
+`autoRotateAngle` is the angle by which the field is rotated on every frame.
+`autoRotateSpeed` is the value by which `autoRotateAngle` is changed. So basically the
+derivate of `autoRotateAngle`.
+
+The two functions `updateAutoRotateAngle` and `updateAutoRotateSpeed` take care
+of this:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="96:103" %}{% endcodesnippet %}
+
+The `updatePlayer` method uses those functions to update the game state:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="105:110" %}{% endcodesnippet %}
+

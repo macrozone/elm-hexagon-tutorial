@@ -1,0 +1,7 @@
+Game Loop and Debugger
+----------------------
+
+In this level we introduce the progress counter. This counter starts at 1 and
+is increased by 1 on every frame. This counter is used to calculate the rotations
+and the movement of the enemies.
+
