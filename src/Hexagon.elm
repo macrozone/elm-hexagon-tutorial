@@ -82,9 +82,30 @@ updatePlayerAngle angle dir =
     else
       newAngle
 
+colidesWith: Player -> Enemy -> Bool
+colidesWith player enemy =
+  let 
+    collidesAtIndex: Int -> Bool
+    collidesAtIndex index = 
+      let 
+        fromAngle = Debug.watch ("from Angle"++toString index) ((toFloat index) * 60) 
+        toAngle = Debug.watch ("to Angle"++ toString index) (((toFloat index)+1)*60)
+        playerDegrees = Debug.watch "player degrees" (player.angle * 360 / (2*pi))
+      in
+        playerDegrees >= fromAngle && playerDegrees < toAngle
+  in
+    if enemy.radius > playerRadius || enemy.radius + enemyThickness < playerRadius then
+      False
+    else
+      -- check if open
+
+        indexedMap (,) enemy.parts |> filter snd |> map fst |> any collidesAtIndex
+
+
+
 isGameOver: Game -> Bool
 isGameOver {player, enemies} =
-  False
+  any (colidesWith player) enemies
 
 updateState: Input -> Game -> State
 updateState input game =
