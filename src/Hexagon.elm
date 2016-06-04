@@ -141,7 +141,7 @@ updatePlayer {dir} {player, state} =
   if state == Play then
     let
       newAngle = if state == NewGame then degrees 30 else 
-        Debug.watch "Player angle" (updatePlayerAngle player.angle -dir)
+        Debug.watch "Player angle" (updatePlayerAngle player.angle dir)
     in
       { player | angle = newAngle }
   else
