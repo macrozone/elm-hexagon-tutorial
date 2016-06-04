@@ -306,7 +306,7 @@ view (w, h) game =
     colors = makeColors game.progress
     startMessage = "SPACE to start, &larr;&rarr; to move"
     score =
-      formatTime game.timeRunning
+      formatTime game.msRunning
       |> makeTextBox (Text.height 50)
     message = makeTextBox (Text.height 50) <| 
       case game.state of
