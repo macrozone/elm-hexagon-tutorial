@@ -1,8 +1,8 @@
 Controls
 --------
-:source: https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm
+
 
 We start off by creating the ship. It is controlled by the left and right arrow keys and moves
 on the periphery of an imaginary circle.
 
-{% codesnippet source, lines="1:9", language="elm" %}{% endcodesnippet %}
+{% codesnippet https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm, lines="1:9", language="elm" %}{% endcodesnippet %}
