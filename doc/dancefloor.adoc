@@ -5,4 +5,4 @@ The Scene
 The board is made out of six triangles that touch in the center. They are alternating dark and light.
 The whole scene is going to rotate around the center point as well.
 
-{% codesnippet {source}, lines="76:89", language="elm" %}{% endcodesnippet %}
+{% codesnippet source, lines="76:89", language="elm" %}{% endcodesnippet %}
