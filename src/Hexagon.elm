@@ -135,7 +135,7 @@ updateEnemies game =
 
 updateEnemySpeed: Game -> Float
 updateEnemySpeed game = 
-  2 + (toFloat game.progress)/1000
+  Debug.watch "enemy speed" (2 + (toFloat game.progress)/1000)
  
 
 -- Game loop: Transition from one state to the next.
