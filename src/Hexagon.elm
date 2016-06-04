@@ -1,5 +1,6 @@
 module Game where
-import Time exposing ( .. )
+import Time exposing (..)
+import List exposing (..)
 import AnimationFrame
 import Keyboard
 import Window
@@ -24,6 +25,14 @@ type alias Game =
     player : Player
   , state : State
   , progress : Int
+  , autoRotateAngle : Float
+  , autoRotateSpeed : Float
+  }
+
+type alias Colors =
+  { dark : Color
+  , medium: Color
+  , bright : Color
   }
 
 (gameWidth, gameHeight) = (1024, 576) -- 16:9
@@ -41,6 +50,8 @@ defaultGame =
     player = Player (degrees 30)
   , state = NewGame
   , progress = 0
+  , autoRotateAngle = 0.0
+  , autoRotateSpeed = 0.0
   }
 
 -- UPDATE
@@ -71,6 +82,16 @@ updateProgress {state,progress} =
     Play -> progress + 1
     _ -> progress
 
+updateAutoRotateAngle: Game -> Float
+updateAutoRotateAngle {autoRotateAngle, autoRotateSpeed} =
+  autoRotateAngle + autoRotateSpeed
+
+updateAutoRotateSpeed: Game -> Float
+updateAutoRotateSpeed {progress, autoRotateSpeed} =
+  0.02 * sin (toFloat progress * 0.005 |> Debug.watch "φ")
+  |> Debug.watch "autoRotateSpeed"
+
+
 updatePlayer: Input -> Game -> Player
 updatePlayer {dir} {player} =
   let
@@ -86,6 +107,8 @@ update (timestamp, input) game =
       player = updatePlayer input game
     , state =  Debug.watch "state" (updateState input game)
     , progress = Debug.watch "progress" (updateProgress game)
+    , autoRotateAngle = updateAutoRotateAngle game
+    , autoRotateSpeed = updateAutoRotateSpeed game
   }
 
 -- VIEW
@@ -108,14 +131,74 @@ makePlayer player =
       |> moveRadial angle (playerRadius - 10)
       |> rotate angle
 
+hexagonElement: Int -> List((Float, Float))
+hexagonElement i =
+  let
+    radius = halfWidth * sqrt 2
+    angle0 = 60 * i |> toFloat |> degrees
+    angle1 = 60 * (i+1) |> toFloat |> degrees
+  in
+    [(0.0, 0.0)
+    , (sin angle0 * radius, cos angle0 * radius)
+    , (sin angle1 * radius, cos angle1 * radius)
+    ]
+
+makeField: Colors -> Form
+makeField colors =
+  let
+    color i =
+      if i % 2 == 0 then
+        colors.dark
+      else
+        colors.medium
+    poly i =
+      polygon (hexagonElement i)
+      |> filled (color i)
+  in
+    group (map poly [0..5])
+
+-- the polygon in the center: this is just decoration, so it has no own state
+makeCenterHole : Colors -> Game -> List Form
+makeCenterHole colors game =
+  let
+    shape = ngon 6 60
+    line = solid colors.bright
+  in
+    [ shape
+        |> filled colors.dark
+        |> rotate (degrees 90)
+    , shape
+        |> (outlined {line | width = 4.0})
+        |> rotate (degrees 90)
+    ]
+
+makeColors : Int -> Colors
+makeColors progress =
+  let
+    hue = degrees 0.1 * (toFloat <| progress % 3600)
+  in
+    { dark = (hsl hue 0.6 0.2)
+    , medium = (hsl hue 0.6 0.3)
+    , bright = (hsla hue 0.6 0.6 0.8)
+    }
+
 view : (Int,Int) -> Game -> Element
 view (w, h) game =
-  container w h middle <|
-  collage gameWidth gameHeight
-    [ rect gameWidth gameHeight
-        |> filled bgBlack
-    , makePlayer game.player
-    ]
+  let
+    colors = makeColors game.progress
+  in
+    container w h middle <|
+    collage gameWidth gameHeight
+      [ rect gameWidth gameHeight
+          |> filled bgBlack
+        , group (append
+          [ makeField colors
+          , makePlayer game.player
+          ]
+          (makeCenterHole colors game)
+        )
+        |> rotate game.autoRotateAngle
+      ]
 
 -- SIGNALS
 
