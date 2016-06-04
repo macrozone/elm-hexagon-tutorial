@@ -68,7 +68,6 @@ defaultGame =
   , timeStart = 0.0
   , timeTick = 0.0
   , msRunning = 0.0
-  , timeRunning = 0.0
   , autoRotateAngle = 0.0
   , autoRotateSpeed = 0.0
   }
