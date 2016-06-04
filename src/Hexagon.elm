@@ -8,9 +8,11 @@ import Graphics.Collage exposing (..)
 import Graphics.Element exposing (..)
 import Color exposing (..)
 import Debug
+import Text
+
 
 -- MODEL
-type State = NewGame | Play | GameOver
+type State = NewGame | Starting | Play | Pause | GameOver
 
 type alias Player =
   { angle: Float }
@@ -80,12 +82,21 @@ updatePlayerAngle angle dir =
     else
       newAngle
 
+isGameOver: Game -> Bool
+isGameOver {player, enemies} =
+  False
+
 updateState: Input -> Game -> State
 updateState input game =
   case game.state of
-    NewGame -> Play
-    Play -> Play
-    GameOver -> NewGame
+    Starting -> Play
+    NewGame -> if input.space then Starting else Pause
+    Play -> 
+      if input.space then Pause else 
+        if isGameOver game then GameOver else Play
+    Pause -> if input.space then Play else Pause
+    GameOver -> if input.space then NewGame else GameOver
+
 
 updateProgress: Game -> Int
 updateProgress {state,progress} =
@@ -254,10 +265,24 @@ makeColors progress =
     , bright = (hsla hue 0.6 0.6 0.8)
     }
 
+makeTextBox : (Text.Text -> Text.Text) -> String -> Element
+makeTextBox f string =
+  Text.fromString string
+    |> Text.color (rgb 255 255 255)
+    |> Text.monospace
+    |> f
+    |> leftAligned
+
 view : (Int,Int) -> Game -> Element
 view (w, h) game =
   let
     colors = makeColors game.progress
+    startMessage = "SPACE to start, &larr;&rarr; to move"
+    message = makeTextBox (Text.height 50) <| 
+      case game.state of
+        GameOver -> "Game Over"
+        Pause -> "Pause"
+        _ -> ""
   in
     container w h middle <|
     collage gameWidth gameHeight
@@ -271,6 +296,11 @@ view (w, h) game =
           (makeCenterHole colors game)
         )
         |> rotate game.autoRotateAngle
+      , toForm message 
+        |> move (0, 40)
+      , toForm (
+          if game.state == Play then spacer 1 1 else makeTextBox identity startMessage)
+          |> move (0, 40 - halfHeight)
       ]
 
 -- SIGNALS
