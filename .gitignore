@@ -1,0 +1,7 @@
+.idea
+node_modules
+elm-stuff
+elm.js
+src/music/*.mp3
+.DS_Store
+src/.DS_Store
