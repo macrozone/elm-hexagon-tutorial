@@ -9,7 +9,7 @@ import Graphics.Element exposing (..)
 import Color exposing (..)
 import Debug
 import Text
-
+import String exposing (padLeft)
 
 -- MODEL
 type State = NewGame | Starting | Play | Pause | GameOver
@@ -35,6 +35,9 @@ type alias Game =
   , enemySpeed: Float
   , state : State
   , progress : Int
+  , timeStart : Time
+  , timeTick : Time
+  , msRunning : Float
   , autoRotateAngle : Float
   , autoRotateSpeed : Float
   }
@@ -64,6 +67,9 @@ defaultGame =
   , enemySpeed = 0.0
   , state = NewGame
   , progress = 0
+  , timeStart = 0.0
+  , timeTick = 0.0
+  , msRunning = 0.0
   , autoRotateAngle = 0.0
   , autoRotateSpeed = 0.0
   }
@@ -126,6 +132,13 @@ updateProgress {state,progress} =
     Play -> progress + 1
     _ -> progress
 
+updateMsRunning: Time -> Game -> Time
+updateMsRunning timestamp game = 
+  case game.state of
+    Play -> game.msRunning + timestamp - game.timeTick 
+    NewGame -> 0.0
+    _ -> game.msRunning
+
 updateAutoRotateAngle: Game -> Float
 updateAutoRotateAngle {autoRotateAngle, autoRotateSpeed} =
   autoRotateAngle + autoRotateSpeed
@@ -134,7 +147,6 @@ updateAutoRotateSpeed: Game -> Float
 updateAutoRotateSpeed {progress, autoRotateSpeed} =
   0.02 * sin (toFloat progress * 0.005 |> Debug.watch "φ")
   |> Debug.watch "autoRotateSpeed"
-
 
 updatePlayer: Input -> Game -> Player
 updatePlayer {dir} {player, state} =
@@ -172,18 +184,19 @@ updateEnemies game =
 updateEnemySpeed: Game -> Float
 updateEnemySpeed game = 
   Debug.watch "enemy speed" (2 + (toFloat game.progress)/1000)
- 
 
 -- Game loop: Transition from one state to the next.
 update : (Time, Input) -> Game -> Game
 update (timestamp, input) game =
- 
   { game |
       player = updatePlayer input game
     , enemies = updateEnemies game
     , enemySpeed = updateEnemySpeed game
     , state =  Debug.watch "state" (updateState input game)
     , progress = Debug.watch "progress" (updateProgress game)
+    , timeStart = Debug.watch "timeStart" (if game.state == NewGame then timestamp else game.timeStart)
+    , timeTick = timestamp
+    , msRunning = Debug.watch "msRunning" (updateMsRunning timestamp game)
     , autoRotateAngle = updateAutoRotateAngle game
     , autoRotateSpeed = updateAutoRotateSpeed game
   }
@@ -298,11 +311,24 @@ makeTextBox f string =
     |> f
     |> leftAligned
 
+formatTime : Time -> String
+formatTime running =
+  let
+    centiseconds = floor (Time.inMilliseconds running / 10)
+    seconds = centiseconds // 100
+    centis = centiseconds % 100
+  in
+    padLeft 3 '0' (toString seconds) ++ "." ++ padLeft 2 '0' (toString centis)
+
+
 view : (Int,Int) -> Game -> Element
 view (w, h) game =
   let
     colors = makeColors game.progress
     startMessage = "SPACE to start, &larr;&rarr; to move"
+    score =
+      formatTime game.msRunning
+      |> makeTextBox (Text.height 50)
     message = makeTextBox (Text.height 50) <| 
       case game.state of
         GameOver -> "Game Over"
@@ -323,6 +349,8 @@ view (w, h) game =
         |> rotate game.autoRotateAngle
       , toForm message 
         |> move (0, 40)
+      , toForm score
+          |> move (100 - halfWidth, halfHeight - 40)
       , toForm (
           if game.state == Play then spacer 1 1 else makeTextBox identity startMessage)
           |> move (0, 40 - halfHeight)
