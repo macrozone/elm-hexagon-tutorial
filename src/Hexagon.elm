@@ -9,7 +9,6 @@ import Color exposing (..)
 
 -- MODEL
 
-
 type alias Player =
   { angle: Float }
 
@@ -22,8 +21,6 @@ type alias Game =
   { 
     player : Player
   }
-
-
 
 (gameWidth, gameHeight) = (1024, 576) -- 16:9
 (halfWidth, halfHeight) = (gameWidth/2, gameHeight/2)
@@ -41,7 +38,6 @@ defaultGame =
   }
 
 -- UPDATE
-
 
 updatePlayerAngle: Float -> Int -> Float
 updatePlayerAngle angle dir =
