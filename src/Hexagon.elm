@@ -17,7 +17,7 @@ type State = NewGame | Starting | Play | Pause | GameOver
 type alias Player =
   { angle: Float }
 
-type alias Enemy = 
+type alias Enemy =
   { radius : Float
   , parts : List(Bool)
   }
@@ -29,7 +29,7 @@ type alias Input =
 
 
 type alias Game =
-  { 
+  {
     player : Player
   , enemies: List(Enemy)
   , enemySpeed: Float
@@ -56,12 +56,13 @@ playerRadius : Float
 playerRadius = gameWidth / 10.0
 
 enemyThickness = 30
+startMessage = "SPACE to start, &larr;&rarr; to move"
 
 -- The global game state
 
 defaultGame : Game
 defaultGame =
-  { 
+  {
     player = Player (degrees 30)
   , enemies = []
   , enemySpeed = 0.0
@@ -97,8 +98,8 @@ updateState input game =
   case game.state of
     Starting -> Play
     NewGame -> if input.space then Starting else Pause
-    Play -> 
-      if input.space then Pause else 
+    Play ->
+      if input.space then Pause else
         if isGameOver game then GameOver else Play
     Pause -> if input.space then Play else Pause
     GameOver -> if input.space then NewGame else GameOver
@@ -112,9 +113,9 @@ updateProgress {state,progress} =
     _ -> progress
 
 updateMsRunning: Time -> Game -> Time
-updateMsRunning timestamp game = 
+updateMsRunning timestamp game =
   case game.state of
-    Play -> game.msRunning + timestamp - game.timeTick 
+    Play -> game.msRunning + timestamp - game.timeTick
     NewGame -> 0.0
     _ -> game.msRunning
 
@@ -131,7 +132,7 @@ updatePlayer: Input -> Game -> Player
 updatePlayer {dir} {player, state} =
   if state == Play then
     let
-      newAngle = if state == NewGame then degrees 30 else 
+      newAngle = if state == NewGame then degrees 30 else
         Debug.watch "Player angle" (updatePlayerAngle player.angle dir)
     in
       { player | angle = newAngle }
@@ -142,14 +143,14 @@ updateEnemies: Game -> List(Enemy)
 updateEnemies game =
   let
     enemyDistance = 300
-    partsFor index = 
+    partsFor index =
       case index of
         0 -> [True, True, True, False, True, True]
         1 -> [True, True, True, False, True, True]
         2 -> [False, True, False, True, True, True]
         3 -> [False, True, True, True, True, True]
         _ -> [True, False, True, True, True, True]
-    radiusFor index = 
+    radiusFor index =
       toFloat (enemyThickness + (iHalfWidth + round (( enemyDistance * (toFloat index)) - (toFloat game.progress) * game.enemySpeed)) % (enemyDistance * 5))
   in
    [
@@ -161,7 +162,7 @@ updateEnemies game =
     ]
 
 updateEnemySpeed: Game -> Float
-updateEnemySpeed game = 
+updateEnemySpeed game =
   Debug.watch "enemy speed" (2 + (toFloat game.progress)/1000)
 
 -- Game loop: Transition from one state to the next.
@@ -192,7 +193,7 @@ moveRadial angle radius =
 
 makePlayer : Player -> Form
 makePlayer player =
-  let 
+  let
     angle = player.angle - degrees 30
   in
     ngon 3 10
@@ -215,9 +216,9 @@ makeEnemy color enemy =
   let
     base = 2.0 * (enemy.radius +enemyThickness) / (sqrt 3)
     makeEnemyPart : Int -> Form
-    makeEnemyPart index = 
-      trapezoid base enemyThickness color 
-        |> rotate (degrees <| toFloat (90 + index * 60)) 
+    makeEnemyPart index =
+      trapezoid base enemyThickness color
+        |> rotate (degrees <| toFloat (90 + index * 60))
         |> moveRadial (degrees <| toFloat (index * 60)) (enemy.radius +enemyThickness)
 
     -- color = (hsl (radius/100) 1 0.5)
@@ -227,7 +228,7 @@ makeEnemy color enemy =
 
 makeEnemies : Color -> List(Enemy) -> List(Form)
 makeEnemies color enemys =
-  map (makeEnemy color) enemys 
+  map (makeEnemy color) enemys
 
 
 
@@ -304,36 +305,34 @@ view : (Int,Int) -> Game -> Element
 view (w, h) game =
   let
     colors = makeColors game.progress
-    startMessage = "SPACE to start, &larr;&rarr; to move"
     score =
       formatTime game.msRunning
       |> makeTextBox (Text.height 50)
-    message = makeTextBox (Text.height 50) <| 
+    message = makeTextBox (Text.height 50) <|
       case game.state of
         GameOver -> "Game Over"
         Pause -> "Pause"
         _ -> ""
+    bg = rect gameWidth gameHeight |> filled bgBlack
+    field = append
+        [ makeField colors
+        , makePlayer game.player
+        , group <| makeEnemies colors.bright game.enemies
+        ]
+        (makeCenterHole colors game)
+      |> group
   in
     container w h middle <|
     collage gameWidth gameHeight
-      [ rect gameWidth gameHeight
-          |> filled bgBlack
-        , group (append
-          [ makeField colors
-          , makePlayer game.player
-          , group <| makeEnemies colors.bright game.enemies
-          ]
-          (makeCenterHole colors game)
-        )
-        |> rotate game.autoRotateAngle
-      , toForm message 
-        |> move (0, 40)
-      , toForm score
-          |> move (100 - halfWidth, halfHeight - 40)
+      [ bg
+      , field |> rotate game.autoRotateAngle |> beatPulse game
+      , toForm message |> move (0, 40)
+      , toForm score |> move (100 - halfWidth, halfHeight - 40)
       , toForm (
-          if game.state == Play then spacer 1 1 else makeTextBox identity startMessage)
-          |> move (0, 40 - halfHeight)
-      ]
+          if game.state == Play then spacer 1 1
+          else makeTextBox identity startMessage
+        ) |> move (0, 40 - halfHeight)
+    ]
 
 -- SIGNALS
 
@@ -355,4 +354,3 @@ input =
   -- only update on a new frame
   |> Signal.sampleOn AnimationFrame.frame
   |> Time.timestamp
-
