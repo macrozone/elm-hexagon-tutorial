@@ -1,3 +1,12 @@
+
+.idea
+node_modules
+elm-stuff
+elm.js
+src/music/*.mp3
+.DS_Store
+src/.DS_Store
+
 # Node rules:
 ## Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
@@ -16,3 +25,4 @@ _book
 *.pdf
 
 .idea/
+
