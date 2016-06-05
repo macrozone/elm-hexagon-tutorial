@@ -2,4 +2,72 @@ UI
 --
 
 Up next are the UI elements: The text messages at the beginning and end of the game and the
-clock at the top left of the screen.
+clock at the top left of the screen. We also add a pause state.
+
+We need two more imports:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="11:12" %}{% endcodesnippet %}
+
+Two new states are added to the State type: `Starting` and `Pause`. `Starting` is needed to reset
+the counter and to cue the music later on.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="14:15" %}{% endcodesnippet %}
+
+
+## UI elements
+
+There are two UI elements in the game: The clock at the upper left corner and the status display
+and help text in the center of the screen.
+
+The start message is a constant and therefore defined with the models:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="59:59" %}{% endcodesnippet %}
+
+We need a helper function to transform the string to an `Element` type. The function is going to format
+the text as well. The first argument of the function is the font size, the second argument the text
+string.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="286:292" %}{% endcodesnippet %}
+
+Another helper function is needed to display the clock. The input is a `Time` value that is created
+by the timestamp function. This is the reason why we wrap the input signal with a timestamp.
+
+The clock should display the time in steps of 1/100th of a second. We therefore create three variables:
+`centiseconds` is a helper variable to hold the 1/100th of a second value. +
+`seconds` uses an integer division to divide the centiseconds and cut off the sub-seconds. +
+`centis` uses a modulo function to keep only the sub-seconds. +
+The `padLeft` method pads the number with zeroes.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="294:301" %}{% endcodesnippet %}
+
+
+The view function is now extended to use the UI elements.
+
+The `score` value is going to show the time that has passed. +
+The value of the `message` box depends on the state of the game. It is either "Game Over",
+"Pause" or empty.
+
+The `toForm` method turns an `Element` into a `Form` object. That way it can be modified later on.
+In our case it is moved to the correct position on the screen.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="304:335" %}{% endcodesnippet %}
+
+
+
+## Pause
+We have to add the two new states to the `updateState` method. The Starting state is only used
+to reset the counters and after that is automatically transitioned to the `Play` state.
+
+When the user presses the space bar the game should pause.
+
+We are already adding a stub for the `isGameOver` method here. In the next chapter we are going to add
+collision detection. Until then the method just returns False.
+
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="92:105" %}{% endcodesnippet %}
+
+The `updatePlayer` function is modified so that the ship is only moved when the game is running.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="130:139" %}{% endcodesnippet %}
+
+
