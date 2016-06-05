@@ -84,3 +84,4 @@ The `updatePlayer` method uses those functions to update the game state:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="105:110" %}{% endcodesnippet %}
 
+The whole file can be seen https://github.com/macrozone/elm-hexagon-tutorial/blob/chapter/dancefloor/src/Hexagon.elm[here].
