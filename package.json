@@ -6,6 +6,7 @@
     "server": "python -m SimpleHTTPServer 5000"
   },
   "dependencies": {
-    "watch": "^0.16.0"
+    "watch": "^0.16.0",
+    "elm": "0.17"
   }
 }
