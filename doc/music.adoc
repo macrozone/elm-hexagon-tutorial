@@ -3,3 +3,99 @@ Music and Bass Shake
 
 In Hexagon, the music is an important element of the game. It is even part of the game mechanics:
 Whenever there is a bass sequence, the whole stage is shaking.
+
+The original game music is copyrighted. Therefore we provide an alternative track
+for this tutorial that has a Creative Commons license.
+
+The audio library that we are using is another dependency that has to be installed.
+
+
+## Download the Music
+The track that we are going to use is called "Shiny Tech" by Kevin MacLeod.
+Download it from the [Incompetech](http://incompetech.com/music/royalty-free/index.html?collection=12&page=1)
+website.
+
+---
+
+If you live in a country where it is allowed to download copyrighted material
+for private use, such as in Switzerland, then you can actually use the original
+track.
+Download the Hexagon SWF file from [here]()
+and unzip it. (On a Mac, just double-click the file.)
+The music is the file "Sound 11".
+
+---
+
+
+Create a folder called "music" in your source directory. Rename the downloaded
+file to "music.mp3" and copy it into the music folder.
+
+
+## Fix the Elm Debugger
+
+## Install the audio library
+
+## Add the track meta information
+The playing field should pump in sync with the beat. Therefore we have to define
+the speed of the track and the sections where there is a bass part.
+
+Add three variables for beat, amplitude and phase:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="72:74" %}{% endcodesnippet %}
+
+Phase lets you adjust the start of the pumping so it matches the music exactly.
+
+The beat is given in bpm which has to be calculated first using this function:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="72:74" %}{% endcodesnippet %}
+
+Next we add a function `hasBass` that takes a time value and returns `True` if there
+is a bass passage or `False` otherwise.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Music.elm", lines="14:21" %}{% endcodesnippet %}
+
+For the original track use those values:
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Music.elm", lines="14:21" %}{% endcodesnippet %}
+
+
+## Cue the music
+
+The music should play when the game state is `Play` and pause for all other
+states. The music should restart at the beginning whenever a game is
+restarted. This means we have to cue the audio whenever a game is restarted.
+
+That's where the `Starting` state comes in. When the game is in this state
+the music is cued back to zero.
+
+Theoretically the music should be cued to the beginning when it has reached
+the end. That functionality is left as an excercise to the user.
+
+## Bass pump
+Add a `hasBass : Bool` property to the Game model and `hasBass = False`
+to the defaultGame object.
+
+The hasBass value is set in the `update` method:
+
+  hasBass = Music.hasBass game.msRunning
+
+The `beatPulse` method takes the game state and a Form (the playing field)
+as input and returns a Form (the pulsating playing field).
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Music.elm", lines="14:21" %}{% endcodesnippet %}
+
+The `pump` method calculates the value that is passed to the scale method using
+a sin function. +
+The input is the game progress (an Int). The `sin` function returns a value
+between -1 and 1 so we are multiplying it with
+`beatAmplitude` to specify how much the stage should shake. +
+The `beatPhase` value is used to adjust the timing so it matches with the music.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Music.elm", lines="14:21" %}{% endcodesnippet %}
+
+The center hole is always pulsating but it should be in sync with the rest of the
+stage during a bass sequence. For that we adjust the `makeCenterHole` function.
+Whenever there is a bass sequence the radius of the center piece should remain constant
+otherwise it should be pumping.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Music.elm", lines="14:21" %}{% endcodesnippet %}
+

@@ -2,7 +2,10 @@ Elm Game Tutorial
 -----------------
 
 In this tutorial we are going to create a game in elm. The game is based on
-Terry Cavanagh's great arcade game http://terrycavanaghgames.com/hexagon/[Hexagon]. That game was the prototype for the successful mobile game Super Hexagon.
+Terry Cavanagh's great arcade game http://terrycavanaghgames.com/hexagon/[Hexagon].
+That game was the prototype for the successful mobile game Super Hexagon.
 
+The tutorial requires some knowledge of the concept of functional programming.
 
+It is is split up in seven parts each with a special focus.
 
