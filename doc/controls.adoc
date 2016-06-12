@@ -5,4 +5,47 @@ Controls
 We start off by creating the ship. It is controlled by the left and right arrow keys and moves
 on the periphery of an imaginary circle.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="1:9", language="elm" %}{% endcodesnippet %}
+== Model
+
+We first setup the model for the `Game` which contains the `Player` with the position (represented by an angle). We also define a type `Input` which represents how the player can interact with the game:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="1:24", language="elm" %}{% endcodesnippet %}
+
+We'll also need some constant values, e.g. the screen-sizes and the radius of the player's circle, as well as the `defaultGame` which will be our initial state of the game:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="25:39", language="elm" %}{% endcodesnippet %}
+
+
+== Update
+
+We now define how the state of the game can change over time. This state-transition is done with the function `update : (Time, Input) -> Game -> Game`. This function will receive our `Input` as well as a `Time`, which we do not need right now:
+
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="61:68", language="elm" %}{% endcodesnippet %}
+
+`updatePlayer` will update the player's angle depending on the direction of the Input (-1: rotate left, +1: rotate right):
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="42:59", language="elm" %}{% endcodesnippet %}
+
+== View
+
+Elm provides different libraries to output html or to render 2d-graphics on a canvas. We use the `Graphics`-Package for this.
+
+The `Player` will be a small triangle that we rotate around the game's center. A black background will represent our game-screen. We also change the `Player`'s color depending on the angle (for fun and profit):
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="71:87", language="elm" %}{% endcodesnippet %}
+
+The function `view : (Int,Int) -> Game -> Element` is the main function of the view part of our application. It receives not only the game-state but also the current size of the window (represented by the first tupel-parameter):
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="88:97", language="elm" %}{% endcodesnippet %}
+
+== Wiring
+
+With the `Model`, the `Update`-function and the `View` in place we are now able to wire everything together.
+
+We use the outdated concept of `Signals` in this tutorial and might replace it with the newer concept of `Subscriptions`:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="98:120", language="elm" %}{% endcodesnippet %}
+
+
+
