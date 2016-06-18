@@ -59,7 +59,9 @@ updatePlayerAngle angle dir =
     else
       newAngle
 
-
+isGameOver: Game -> Bool
+isGameOver {player} =
+  False
 
 updateProgress: Game -> Int
 updateProgress {state,progress} =
@@ -76,11 +78,15 @@ updateMsRunning timestamp game =
     _ -> game.msRunning
 
 updatePlayer: Int -> Game -> Player
-updatePlayer dir {player} =
-  let
-    newAngle = updatePlayerAngle player.angle dir
-  in
-    { player | angle = newAngle }
+updatePlayer dir {player, state} =
+  if state == Play then
+    let
+      newAngle = if state == NewGame then degrees 30
+                 else updatePlayerAngle player.angle dir
+    in
+      { player | angle = newAngle }
+  else
+    player
 
 {-| Updates the game state on a keyboard command -}
 onUserInput : Keyboard.Msg -> Game -> (Game, Cmd Msg)
@@ -101,6 +107,7 @@ onUserInput keyMsg game =
   in
     ( { game | keyboardModel = keyboardModel
              , direction = (Keyboard.arrows keyboardModel).x
+             , state = nextState
       }
     , Cmd.map KeyboardExtraMsg keyboardCmd )
 
@@ -109,12 +116,18 @@ onFrame : Time -> Game -> (Game, Cmd Msg)
 onFrame time game =
   let
     nextCmd = Cmd.none
+    nextState =
+      case game.state of
+        Starting -> Pause
+        Resume -> Play
+        Play -> if isGameOver game then GameOver else Play
+        _ -> game.state
   in
     ( { game |
         player = updatePlayer game.direction game
-      , state =  Debug.log "state" (updateState input game)
+      , state = Debug.log "state" nextState
       , progress = Debug.log "progress" (updateProgress game)
-      , timeStart = Debug.log "timeStart" (if game.state == NewGame then time else game.timeStart)
+      , timeStart = if game.state == NewGame then time else game.timeStart
       , timeTick = time
       , msRunning = Debug.log "msRunning" (updateMsRunning time game)
     }, nextCmd )
@@ -182,6 +195,11 @@ init =
     ( { player = Player (degrees 30)
       , keyboardModel = keyboardModel
       , direction = 0
+      , state = Starting
+      , progress = 0
+      , timeStart = 0.0
+      , timeTick = 0.0
+      , msRunning = 0.0
       }
     , Cmd.batch
       [ Cmd.map KeyboardExtraMsg keyboardCmd
