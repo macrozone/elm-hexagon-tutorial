@@ -19,7 +19,7 @@ import Task exposing (Task, andThen)
 
 
 -- MODEL
-type State = Loading | NewGame | Starting | Play | Pausing | Pause | Resume | Dying | GameOver
+type State = Loading | NewGame | Starting | Play | Pausing | Pause | Resume | GameOver
 
 type Msg
   = Step Time
