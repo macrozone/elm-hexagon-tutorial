@@ -199,7 +199,7 @@ updateEnemies: Game -> List(Enemy)
 updateEnemies game =
   let
     enemyDistance = 300
-    enemies = 
+    enemies =
       [ [False, True, False, True, False, True]
       , [True, True, True, False, True, True]
       , [False, True, False, True, True, True]
@@ -212,15 +212,15 @@ updateEnemies game =
     numEnemies = List.length enemies
     maxDistance = numEnemies * enemyDistance
     enemyProgress = (toFloat game.progress) * game.enemySpeed
-    radiusFor index = 
+    radiusFor index =
       enemyThickness + (iHalfWidth + round ( enemyDistance * (toFloat index) - enemyProgress)) % maxDistance
-      |> toFloat 
+      |> toFloat
   in
     List.indexedMap (\index parts -> {
-      parts = parts, 
+      parts = parts,
       radius = radiusFor index
     }) enemies
-  
+
 
 updateEnemySpeed: Game -> Float
 updateEnemySpeed game =
@@ -413,6 +413,7 @@ makeTextBox size string =
     |> Text.monospace
     |> Text.height size
     |> leftAligned
+
 beatPulse : Game -> Form -> Form
 beatPulse game =
   if game.hasBass then
