@@ -50,9 +50,9 @@ The `Player` will be a small triangle that we rotate around the game's center. A
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="101:119", language="elm" %}{% endcodesnippet %}
 
-The function `view : Game -> Html.Html Msg` is the main function of the view part of our application. It receives the current game-state:
+The function `view : Game -> Html.Html Msg` is the main function of the view part of our application. It receives the current game-state and returns `Html`:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="88:97", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="121:133", language="elm" %}{% endcodesnippet %}
 
 == Wiring
 
