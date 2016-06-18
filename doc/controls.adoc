@@ -7,9 +7,9 @@ on the periphery of an imaginary circle.
 
 == Model
 
-We first setup the model for the `Game` which contains the `Player` with the position (represented by an angle). We also define a type `Input` which represents how the player can interact with the game:
+We first setup the model for the `Game` which contains the `Player` with the position (represented by an angle), the current 'direction' in which the player is moving and a `keyboardModel`:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="1:24", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="1:27", language="elm" %}{% endcodesnippet %}
 
 We'll also need some constant values, e.g. the screen-sizes and the radius of the player's circle, as well as the `defaultGame` which will be our initial state of the game:
 
