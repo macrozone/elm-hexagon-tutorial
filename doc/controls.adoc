@@ -11,9 +11,9 @@ We first setup the model for the `Game` which contains the `Player` with the pos
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="1:27", language="elm" %}{% endcodesnippet %}
 
-We'll also need some constant values, e.g. the screen-sizes and the radius of the player's circle, as well as the `defaultGame` which will be our initial state of the game:
+We'll also need some constant values, e.g. the screen-sizes and the radius of the player's circle:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="25:39", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="28:34", language="elm" %}{% endcodesnippet %}
 
 
 == Update
