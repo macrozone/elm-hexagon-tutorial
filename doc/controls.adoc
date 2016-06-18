@@ -34,6 +34,10 @@ We now define how the state of the game can change over time. This state-transit
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="65:80", language="elm" %}{% endcodesnippet %}
 
+`onFrame` on the other hand will update the player's position on the next frame:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="81:89", language="elm" %}{% endcodesnippet %}
+
 `updatePlayer` will update the player's angle depending on the direction of the Input (-1: rotate left, +1: rotate right):
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="42:59", language="elm" %}{% endcodesnippet %}
