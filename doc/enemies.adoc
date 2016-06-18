@@ -16,3 +16,6 @@ We add a list of enemies to the game state as well as `enemySpeed` which will in
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="31:45", language="elm" %}{% endcodesnippet %}
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="64:67", language="elm" %}{% endcodesnippet %}
+
+== Updating enemies
+
