@@ -13,15 +13,10 @@ import Html
 
 
 -- MODEL
-type State = NewGame | Play | GameOver | Starting | Pause | Resume
+type State = NewGame | Play | GameOver | Pause | Resume
 
 
 -- MODEL
-
-type Msg
-  = Step Time
-  | KeyboardExtraMsg Keyboard.Msg
-  | Noop
 
 type alias Player =
   { angle: Float }
@@ -47,7 +42,6 @@ type alias Game =
   , msRunning : Float
   , autoRotateAngle : Float
   , autoRotateSpeed : Float
-  , keyboardModel : Keyboard.Model
   }
 
 type alias Colors =
@@ -55,6 +49,11 @@ type alias Colors =
   , medium: Color
   , bright : Color
   }
+
+type Msg
+  = Step Time
+  | KeyboardExtraMsg Keyboard.Msg
+  | Noop
 
 (gameWidth, gameHeight) = (1024, 576) -- 16:9
 (halfWidth, halfHeight) = (gameWidth/2, gameHeight/2)
@@ -163,7 +162,7 @@ onUserInput keyMsg game =
       else Still
     nextState =
       case game.state of
-        NewGame -> if spacebar then Starting else NewGame
+        NewGame -> if spacebar then Play else NewGame
         Play -> if spacebar then Pause else Play
         GameOver -> if spacebar then NewGame else GameOver
         Pause -> if spacebar then Resume else Pause
@@ -182,7 +181,7 @@ onFrame time game =
     nextCmd = Cmd.none
     nextState =
       case game.state of
-        Starting -> Pause
+        NewGame -> NewGame
         Resume -> Play
         Play -> if isGameOver game then GameOver else Play
         _ -> game.state
@@ -353,9 +352,9 @@ init =
     ( { player = Player (degrees 30)
       , keyboardModel = keyboardModel
       , direction = Still
+      , state = NewGame
       , enemies = []
       , enemySpeed = 0.0
-      , state = Starting
       , progress = 0
       , timeStart = 0.0
       , timeTick = 0.0
