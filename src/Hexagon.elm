@@ -11,10 +11,12 @@ import Debug
 import Html.App as App
 import Html
 
+
 -- MODEL
 type State = NewGame | Play | GameOver | Starting | Pause | Resume
 
 
+-- MODEL
 
 type Msg
   = Step Time
@@ -24,16 +26,18 @@ type Msg
 type alias Player =
   { angle: Float }
 
+type Direction = Left | Right | Still
+
 type alias Game =
   { 
     player : Player
+  , direction : Direction
+  , keyboardModel : Keyboard.Model
   , state : State
   , progress : Int
   , timeStart : Time
   , timeTick : Time
   , msRunning : Float
-  , direction : Int
-  , keyboardModel : Keyboard.Model
   }
 
 (gameWidth, gameHeight) = (1024, 576) -- 16:9
@@ -47,10 +51,14 @@ playerRadius = gameWidth / 10.0
 
 -- UPDATE
 
-updatePlayerAngle: Float -> Int -> Float
+updatePlayerAngle: Float -> Direction -> Float
 updatePlayerAngle angle dir =
   let
-    newAngle = (angle + toFloat (-dir * 4) * 0.032)
+    sign = 
+      if dir == Left then 1
+      else if dir == Right then -1
+      else 0
+    newAngle = (angle + toFloat (sign * 4) * 0.032)
   in
     if newAngle < 0 then
       newAngle + 2 * pi
@@ -58,6 +66,17 @@ updatePlayerAngle angle dir =
       newAngle - 2 * pi
     else
       newAngle
+
+updatePlayer: Direction -> Game -> Player
+updatePlayer dir {player, state} =
+  if state == Play then
+    let
+      newAngle = if state == NewGame then degrees 30
+                 else updatePlayerAngle player.angle dir
+    in
+      { player | angle = newAngle }
+  else
+    player
 
 isGameOver: Game -> Bool
 isGameOver {player} =
@@ -77,16 +96,6 @@ updateMsRunning timestamp game =
     NewGame -> 0.0
     _ -> game.msRunning
 
-updatePlayer: Int -> Game -> Player
-updatePlayer dir {player, state} =
-  if state == Play then
-    let
-      newAngle = if state == NewGame then degrees 30
-                 else updatePlayerAngle player.angle dir
-    in
-      { player | angle = newAngle }
-  else
-    player
 
 {-| Updates the game state on a keyboard command -}
 onUserInput : Keyboard.Msg -> Game -> (Game, Cmd Msg)
@@ -96,7 +105,10 @@ onUserInput keyMsg game =
       Keyboard.update keyMsg game.keyboardModel
     spacebar = Keyboard.isPressed Keyboard.Space keyboardModel &&
       not (Keyboard.isPressed Keyboard.Space game.keyboardModel)
-    
+    direction = 
+      if (Keyboard.arrows keyboardModel).x < 0 then Left
+      else if (Keyboard.arrows keyboardModel).x > 0 then Right
+      else Still
     nextState =
       case game.state of
         NewGame -> if spacebar then Starting else NewGame
@@ -106,7 +118,7 @@ onUserInput keyMsg game =
         _ -> game.state
   in
     ( { game | keyboardModel = keyboardModel
-             , direction = (Keyboard.arrows keyboardModel).x
+             , direction = direction
              , state = nextState
       }
     , Cmd.map KeyboardExtraMsg keyboardCmd )
@@ -194,7 +206,7 @@ init =
   in
     ( { player = Player (degrees 30)
       , keyboardModel = keyboardModel
-      , direction = 0
+      , direction = Still
       , state = Starting
       , progress = 0
       , timeStart = 0.0
