@@ -18,11 +18,6 @@ type State = NewGame | Play | GameOver | Starting | Pause | Resume
 
 -- MODEL
 
-type Msg
-  = Step Time
-  | KeyboardExtraMsg Keyboard.Msg
-  | Noop
-
 type alias Player =
   { angle: Float }
 
@@ -39,6 +34,11 @@ type alias Game =
   , timeTick : Time
   , msRunning : Float
   }
+
+type Msg
+  = Step Time
+  | KeyboardExtraMsg Keyboard.Msg
+  | Noop
 
 (gameWidth, gameHeight) = (1024, 576) -- 16:9
 (halfWidth, halfHeight) = (gameWidth/2, gameHeight/2)
