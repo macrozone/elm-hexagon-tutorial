@@ -125,23 +125,28 @@ updateEnemies: Game -> List(Enemy)
 updateEnemies game =
   let
     enemyDistance = 300
-    partsFor index = 
-      case index of
-        0 -> [True, True, True, False, True, True]
-        1 -> [True, True, True, False, True, True]
-        2 -> [False, True, False, True, True, True]
-        3 -> [False, True, True, True, True, True]
-        _ -> [True, False, True, True, True, True]
+    enemies = 
+      [ [False, True, False, True, False, True]
+      , [True, True, True, False, True, True]
+      , [False, True, False, True, True, True]
+      , [False, True, True, True, True, True]
+      , [True, False, True, True, True, True]
+      , [True, False, True, True, True, False]
+      , [False, False, False, True, True, True]
+      , [False, True, True, True, True, True]
+      ]
+    numEnemies = List.length enemies
+    maxDistance = numEnemies * enemyDistance
+    enemyProgress = (toFloat game.progress) * game.enemySpeed
     radiusFor index = 
-      toFloat (enemyThickness + (iHalfWidth + round (( enemyDistance * (toFloat index)) - (toFloat game.progress) * game.enemySpeed)) % (enemyDistance * 5))
+      enemyThickness + (iHalfWidth + round ( enemyDistance * (toFloat index) - enemyProgress)) % maxDistance
+      |> toFloat 
   in
-   [
-      {parts = partsFor 0, radius = radiusFor 0}
-    , {parts = partsFor 1, radius = radiusFor 1}
-    , {parts = partsFor 2, radius = radiusFor 2}
-    , {parts = partsFor 3, radius = radiusFor 3}
-    , {parts = partsFor 4, radius = radiusFor 4}
-    ]
+    List.indexedMap (\index parts -> {
+      parts = parts, 
+      radius = radiusFor index
+    }) enemies
+  
 
 updateEnemySpeed: Game -> Float
 updateEnemySpeed game = 
