@@ -8,9 +8,8 @@ import Element exposing (..)
 import Color exposing (..)
 import Html.App as App
 import Html
+
 -- MODEL
-
-
 
 type Msg
   = Step Time
@@ -20,10 +19,12 @@ type Msg
 type alias Player =
   { angle: Float }
 
+type Direction = Left | Right | Still
+
 type alias Game =
   { 
     player : Player
-  , direction : Int
+  , direction : Direction
   , keyboardModel : Keyboard.Model
   }
 
@@ -37,10 +38,14 @@ playerRadius = gameWidth / 10.0
 
 -- UPDATE
 
-updatePlayerAngle: Float -> Int -> Float
+updatePlayerAngle: Float -> Direction -> Float
 updatePlayerAngle angle dir =
   let
-    newAngle = (angle + toFloat (-dir * 4) * 0.032)
+    sign = 
+      if dir == Left then 1
+      else if dir == Right then -1
+      else 0
+    newAngle = (angle + toFloat (sign * 4) * 0.032)
   in
     if newAngle < 0 then
       newAngle + 2 * pi
@@ -49,7 +54,7 @@ updatePlayerAngle angle dir =
     else
       newAngle
 
-updatePlayer: Int -> Game -> Player
+updatePlayer: Direction -> Game -> Player
 updatePlayer dir {player} =
   let
     newAngle = updatePlayerAngle player.angle dir
@@ -63,9 +68,13 @@ onUserInput keyMsg game =
   let
     ( keyboardModel, keyboardCmd ) =
       Keyboard.update keyMsg game.keyboardModel
+    direction = 
+      if (Keyboard.arrows keyboardModel).x < 0 then Left
+      else if (Keyboard.arrows keyboardModel).x > 0 then Right
+      else Still
   in
     ( { game | keyboardModel = keyboardModel
-             , direction = (Keyboard.arrows keyboardModel).x
+             , direction = direction
       }
     , Cmd.map KeyboardExtraMsg keyboardCmd )
 
@@ -141,7 +150,7 @@ init =
   in
     ( { player = Player (degrees 30)
       , keyboardModel = keyboardModel
-      , direction = 0
+      , direction = Still
       }
     , Cmd.batch
       [ Cmd.map KeyboardExtraMsg keyboardCmd
