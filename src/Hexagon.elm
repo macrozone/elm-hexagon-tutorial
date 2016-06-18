@@ -53,7 +53,6 @@ type alias Game =
   , msRunning : Float
   , autoRotateAngle : Float
   , autoRotateSpeed : Float
-  , keyboardModel : Keyboard.Model
   , hasBass : Bool
   , music: Maybe Sound
   }
@@ -63,6 +62,7 @@ type alias Colors =
   , medium: Color
   , bright : Color
   }
+
 
 (gameWidth, gameHeight) = (1024, 576) -- 16:9
 (halfWidth, halfHeight) = (gameWidth/2, gameHeight/2)
@@ -220,6 +220,7 @@ updateEnemies game =
 updateEnemySpeed: Game -> Float
 updateEnemySpeed game =
   2 + (toFloat game.progress)/1000
+
 
 {-| Updates the game state on a keyboard command -}
 onUserInput : Keyboard.Msg -> Game -> (Game, Cmd Msg)
@@ -480,9 +481,9 @@ init =
     ( { player = Player (degrees 30)
       , keyboardModel = keyboardModel
       , direction = Still
+      , state = NewGame
       , enemies = []
       , enemySpeed = 0.0
-      , state = Starting
       , progress = 0
       , timeStart = 0.0
       , timeTick = 0.0
