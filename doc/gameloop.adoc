@@ -1,7 +1,23 @@
 Game Loop and Debugger
 ----------------------
 
-In this level we introduce the progress counter. This counter starts at 1 and
-is increased by 1 on every frame. This counter is used to calculate the rotations
-and the movement of the enemies.
+In this level we introduce the progress counter. This counter starts at 1 and is increased by 1 on every frame. This counter is used to calculate the rotations and the movement of the enemies.
+
+We further extend the controls by a `Play`/`Pause`-behavior triggered by the space-key. For that we introduce a new type `State`:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="16:17", language="elm" %}{% endcodesnippet %}
+
+We'll need some of theses states later.
+
+Additionally we'll introduce a timer that counts the milliseconds that the player has played so far. We add this to the `Game`-type:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="26:37", language="elm" %}{% endcodesnippet %}
+
+== Pause / Play
+
+Because the player should only be able to move on the `Play`-`State` we change the updatePlayer slightly:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="70:71", language="elm" %}{% endcodesnippet %}
+
+
 
