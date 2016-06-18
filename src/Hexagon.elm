@@ -11,10 +11,12 @@ import Debug
 import Html.App as App
 import Html
 
+
 -- MODEL
 type State = NewGame | Play | GameOver | Starting | Pause | Resume
 
 
+-- MODEL
 
 type Msg
   = Step Time
@@ -24,21 +26,20 @@ type Msg
 type alias Player =
   { angle: Float }
 
+type Direction = Left | Right | Still
+
 type alias Enemy = 
   { radius : Float
   , parts : List(Bool)
   }
 
-type alias Input =
-  { space : Bool
-  , dir : Int
-  }
-
 type alias Game =
   { 
     player : Player
+  , direction : Direction
   , enemies: List(Enemy)
   , enemySpeed: Float
+  , keyboardModel : Keyboard.Model
   , state : State
   , progress : Int
   , timeStart : Time
@@ -46,7 +47,6 @@ type alias Game =
   , msRunning : Float
   , autoRotateAngle : Float
   , autoRotateSpeed : Float
-  , direction : Int
   , keyboardModel : Keyboard.Model
   }
 
@@ -68,10 +68,14 @@ enemyThickness = 30
 
 -- UPDATE
 
-updatePlayerAngle: Float -> Int -> Float
+updatePlayerAngle: Float -> Direction -> Float
 updatePlayerAngle angle dir =
   let
-    newAngle = (angle + toFloat (-dir * 4) * 0.032)
+    sign = 
+      if dir == Left then 1
+      else if dir == Right then -1
+      else 0
+    newAngle = (angle + toFloat (sign * 4) * 0.032)
   in
     if newAngle < 0 then
       newAngle + 2 * pi
@@ -79,6 +83,17 @@ updatePlayerAngle angle dir =
       newAngle - 2 * pi
     else
       newAngle
+
+updatePlayer: Direction -> Game -> Player
+updatePlayer dir {player, state} =
+  if state == Play then
+    let
+      newAngle = if state == NewGame then degrees 30
+                 else updatePlayerAngle player.angle dir
+    in
+      { player | angle = newAngle }
+  else
+    player
 
 isGameOver: Game -> Bool
 isGameOver {player} =
@@ -98,7 +113,6 @@ updateMsRunning timestamp game =
     NewGame -> 0.0
     _ -> game.msRunning
 
-
 updateAutoRotateAngle: Game -> Float
 updateAutoRotateAngle {autoRotateAngle, autoRotateSpeed} =
   autoRotateAngle + autoRotateSpeed
@@ -107,18 +121,6 @@ updateAutoRotateSpeed: Game -> Float
 updateAutoRotateSpeed {progress, autoRotateSpeed} =
   0.02 * sin (toFloat progress * 0.005 |> Debug.log "φ")
   |> Debug.log "autoRotateSpeed"
-
-
-updatePlayer: Int -> Game -> Player
-updatePlayer dir {player, state} =
-  if state == Play then
-    let
-      newAngle = if state == NewGame then degrees 30
-                 else updatePlayerAngle player.angle dir
-    in
-      { player | angle = newAngle }
-  else
-    player
 
 updateEnemies: Game -> List(Enemy)
 updateEnemies game =
@@ -155,7 +157,10 @@ onUserInput keyMsg game =
       Keyboard.update keyMsg game.keyboardModel
     spacebar = Keyboard.isPressed Keyboard.Space keyboardModel &&
       not (Keyboard.isPressed Keyboard.Space game.keyboardModel)
-    
+    direction = 
+      if (Keyboard.arrows keyboardModel).x < 0 then Left
+      else if (Keyboard.arrows keyboardModel).x > 0 then Right
+      else Still
     nextState =
       case game.state of
         NewGame -> if spacebar then Starting else NewGame
@@ -165,7 +170,7 @@ onUserInput keyMsg game =
         _ -> game.state
   in
     ( { game | keyboardModel = keyboardModel
-             , direction = (Keyboard.arrows keyboardModel).x
+             , direction = direction
              , state = nextState
       }
     , Cmd.map KeyboardExtraMsg keyboardCmd )
@@ -347,9 +352,9 @@ init =
   in
     ( { player = Player (degrees 30)
       , keyboardModel = keyboardModel
+      , direction = Still
       , enemies = []
       , enemySpeed = 0.0
-      , direction = 0
       , state = Starting
       , progress = 0
       , timeStart = 0.0
