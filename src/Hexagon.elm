@@ -1,18 +1,28 @@
-module Game where
 import Time exposing (..)
 import List exposing (..)
 import AnimationFrame
-import Keyboard
+import Keyboard.Extra as Keyboard
 import Window
-import Graphics.Collage exposing (..)
-import Graphics.Element exposing (..)
+import Collage exposing (..)
+import Element exposing (..)
 import Color exposing (..)
+
 import Debug
 import Text
 import String exposing (padLeft)
 
+import Html.App as App
+import Html
+
 -- MODEL
-type State = NewGame | Starting | Play | Pause | GameOver
+type State = NewGame | Play | GameOver | Starting | Pause | Resume
+
+
+type Msg
+  = Step Time
+  | KeyboardExtraMsg Keyboard.Msg
+  | Noop
+
 
 type alias Player =
   { angle: Float }
@@ -27,7 +37,6 @@ type alias Input =
   , dir : Int
   }
 
-
 type alias Game =
   {
     player : Player
@@ -40,6 +49,8 @@ type alias Game =
   , msRunning : Float
   , autoRotateAngle : Float
   , autoRotateSpeed : Float
+  , direction : Int
+  , keyboardModel : Keyboard.Model
   }
 
 type alias Colors =
@@ -58,22 +69,7 @@ playerRadius = gameWidth / 10.0
 enemyThickness = 30
 startMessage = "SPACE to start, &larr;&rarr; to move"
 
--- The global game state
 
-defaultGame : Game
-defaultGame =
-  {
-    player = Player (degrees 30)
-  , enemies = []
-  , enemySpeed = 0.0
-  , state = NewGame
-  , progress = 0
-  , timeStart = 0.0
-  , timeTick = 0.0
-  , msRunning = 0.0
-  , autoRotateAngle = 0.0
-  , autoRotateSpeed = 0.0
-  }
 
 -- UPDATE
 
@@ -90,19 +86,8 @@ updatePlayerAngle angle dir =
       newAngle
 
 isGameOver: Game -> Bool
-isGameOver {player, enemies} =
+isGameOver {player} =
   False
-
-updateState: Input -> Game -> State
-updateState input game =
-  case game.state of
-    Starting -> Play
-    NewGame -> if input.space then Starting else Pause
-    Play ->
-      if input.space then Pause else
-        if isGameOver game then GameOver else Play
-    Pause -> if input.space then Play else Pause
-    GameOver -> if input.space then NewGame else GameOver
 
 
 updateProgress: Game -> Int
@@ -119,21 +104,24 @@ updateMsRunning timestamp game =
     NewGame -> 0.0
     _ -> game.msRunning
 
+
 updateAutoRotateAngle: Game -> Float
 updateAutoRotateAngle {autoRotateAngle, autoRotateSpeed} =
   autoRotateAngle + autoRotateSpeed
 
 updateAutoRotateSpeed: Game -> Float
 updateAutoRotateSpeed {progress, autoRotateSpeed} =
-  0.02 * sin (toFloat progress * 0.005 |> Debug.watch "φ")
-  |> Debug.watch "autoRotateSpeed"
+  0.02 * sin (toFloat progress * 0.005 |> Debug.log "φ")
+  |> Debug.log "autoRotateSpeed"
 
-updatePlayer: Input -> Game -> Player
-updatePlayer {dir} {player, state} =
+
+
+updatePlayer: Int -> Game -> Player
+updatePlayer dir {player, state} =
   if state == Play then
     let
-      newAngle = if state == NewGame then degrees 30 else
-        Debug.watch "Player angle" (updatePlayerAngle player.angle dir)
+      newAngle = if state == NewGame then degrees 30
+                 else updatePlayerAngle player.angle dir
     in
       { player | angle = newAngle }
   else
@@ -162,24 +150,67 @@ updateEnemies game =
     ]
 
 updateEnemySpeed: Game -> Float
-updateEnemySpeed game =
-  Debug.watch "enemy speed" (2 + (toFloat game.progress)/1000)
+updateEnemySpeed game = 
+  Debug.log "enemy speed" (2 + (toFloat game.progress)/1000)
 
--- Game loop: Transition from one state to the next.
-update : (Time, Input) -> Game -> Game
-update (timestamp, input) game =
-  { game |
-      player = updatePlayer input game
-    , enemies = updateEnemies game
-    , enemySpeed = updateEnemySpeed game
-    , state =  Debug.watch "state" (updateState input game)
-    , progress = Debug.watch "progress" (updateProgress game)
-    , timeStart = Debug.watch "timeStart" (if game.state == NewGame then timestamp else game.timeStart)
-    , timeTick = timestamp
-    , msRunning = Debug.watch "msRunning" (updateMsRunning timestamp game)
-    , autoRotateAngle = updateAutoRotateAngle game
-    , autoRotateSpeed = updateAutoRotateSpeed game
-  }
+{-| Updates the game state on a keyboard command -}
+onUserInput : Keyboard.Msg -> Game -> (Game, Cmd Msg)
+onUserInput keyMsg game =
+
+  let
+    ( keyboardModel, keyboardCmd ) =
+      Keyboard.update keyMsg game.keyboardModel
+    spacebar = Keyboard.isPressed Keyboard.Space keyboardModel &&
+      not (Keyboard.isPressed Keyboard.Space game.keyboardModel)
+    
+    nextState =
+      case game.state of
+        NewGame -> if spacebar then Starting else NewGame
+        Play -> if spacebar then Pause else Play
+        GameOver -> if spacebar then NewGame else GameOver
+        Pause -> if spacebar then Resume else Pause
+        _ -> game.state
+  in
+    ( { game | keyboardModel = keyboardModel
+             , direction = (Keyboard.arrows keyboardModel).x
+             , state = nextState
+      }
+    , Cmd.map KeyboardExtraMsg keyboardCmd )
+
+{-| Updates the game state on every frame -}
+onFrame : Time -> Game -> (Game, Cmd Msg)
+onFrame time game =
+  let
+    nextCmd = Cmd.none
+    nextState =
+      case game.state of
+        Starting -> Pause
+        Resume -> Play
+        Play -> if isGameOver game then GameOver else Play
+        _ -> game.state
+  in
+    ( { game |
+        player = updatePlayer game.direction game
+      , enemies = updateEnemies game
+      , enemySpeed = updateEnemySpeed game
+      , state = Debug.log "state" nextState
+      , progress = Debug.log "progress" (updateProgress game)
+      , timeStart = if game.state == NewGame then time else game.timeStart
+      , timeTick = time
+      , msRunning = Debug.log "msRunning" (updateMsRunning time game)
+      , autoRotateAngle = updateAutoRotateAngle game
+      , autoRotateSpeed = updateAutoRotateSpeed game
+    }, nextCmd )
+
+
+{-| Game loop: Transition from one state to the next. -}
+update : Msg -> Game -> (Game, Cmd Msg)
+update msg game =
+  case msg of
+    KeyboardExtraMsg keyMsg -> onUserInput keyMsg game
+    Step time -> onFrame time game
+    _ -> (game, Cmd.none)
+
 
 -- VIEW
 
@@ -301,9 +332,10 @@ formatTime running =
     padLeft 3 '0' (toString seconds) ++ "." ++ padLeft 2 '0' (toString centis)
 
 
-view : (Int,Int) -> Game -> Element
-view (w, h) game =
+view : Game -> Html.Html Msg
+view game =
   let
+    bg = rect gameWidth gameHeight |> filled bgBlack
     colors = makeColors game.progress
     score =
       formatTime game.msRunning
@@ -313,7 +345,6 @@ view (w, h) game =
         GameOver -> "Game Over"
         Pause -> "Pause"
         _ -> ""
-    bg = rect gameWidth gameHeight |> filled bgBlack
     field = append
         [ makeField colors
         , makePlayer game.player
@@ -322,35 +353,61 @@ view (w, h) game =
         (makeCenterHole colors game)
       |> group
   in
-    container w h middle <|
+    toHtml <|
+    container gameWidth gameHeight middle <|
     collage gameWidth gameHeight
       [ bg
-      , field |> rotate game.autoRotateAngle |> beatPulse game
+      , field |> rotate game.autoRotateAngle
       , toForm message |> move (0, 40)
       , toForm score |> move (100 - halfWidth, halfHeight - 40)
       , toForm (
           if game.state == Play then spacer 1 1
           else makeTextBox 20 startMessage
         ) |> move (0, 40 - halfHeight)
-    ]
+      ]
 
--- SIGNALS
 
-main : Signal Element
+-- SUBSCRIPTIONS
+
+subscriptions : Game -> Sub Msg
+subscriptions game =
+  Sub.batch [
+    AnimationFrame.times (\time -> Step time),
+    Sub.map KeyboardExtraMsg Keyboard.subscriptions
+  ]
+
+
+--INIT
+
+init : (Game, Cmd Msg)
+init =
+  let
+    ( keyboardModel, keyboardCmd ) = Keyboard.init
+  in
+    ( { player = Player (degrees 30)
+      , keyboardModel = keyboardModel
+      , enemies = []
+      , enemySpeed = 0.0
+      , direction = 0
+      , state = Starting
+      , progress = 0
+      , timeStart = 0.0
+      , timeTick = 0.0
+      , msRunning = 0.0
+      , autoRotateAngle = 0.0
+      , autoRotateSpeed = 0.0
+      }
+    , Cmd.batch
+      [ Cmd.map KeyboardExtraMsg keyboardCmd
+      ]
+    )
+
+
+
 main =
-  Signal.map2 view Window.dimensions gameState
+  App.program
+  { init = init
+  , update = update
+  , view = view
+  , subscriptions = subscriptions }
 
-gameState : Signal Game
-gameState =
-  Signal.foldp update defaultGame input
-
--- Creates an event stream from the keyboard inputs and is
--- updated by AnimationFrame.
-input : Signal (Time, Input)
-input =
-  Signal.map2 Input
-    Keyboard.space
-    (Signal.map .x Keyboard.arrows)
-  -- only update on a new frame
-  |> Signal.sampleOn AnimationFrame.frame
-  |> Time.timestamp
