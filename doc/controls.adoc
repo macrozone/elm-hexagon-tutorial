@@ -26,10 +26,13 @@ We'll also need some constant values, e.g. the screen-sizes and the radius of th
 
 == Update
 
-We now define how the state of the game can change over time. This state-transition is done with the function `update : Msg -> Game -> Game`. This function will receive our `Input` as well as a `Time`, which we do not need right now:
+We now define how the state of the game can change over time. This state-transition is done with the function `update : Msg -> Game -> Game`. This function will receive our `Msg` and will update the game-state accordingly. We distinguish here between `KeyboardExtraMsg` and `Step`:
 
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="93:99", language="elm" %}{% endcodesnippet %}
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="61:68", language="elm" %}{% endcodesnippet %}
+`onUserInput` will set the current direction based on the arrow-keys pressed on the keyboard:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="65:80", language="elm" %}{% endcodesnippet %}
 
 `updatePlayer` will update the player's angle depending on the direction of the Input (-1: rotate left, +1: rotate right):
 
