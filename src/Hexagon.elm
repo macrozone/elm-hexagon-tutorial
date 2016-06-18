@@ -13,7 +13,7 @@ import Html
 
 
 -- MODEL
-type State = NewGame | Play | GameOver | Pause | Resume
+type State = NewGame | Play | GameOver | Pause
 
 
 -- MODEL
@@ -23,13 +23,13 @@ type alias Player =
 
 type Direction = Left | Right | Still
 
-type alias Enemy = 
+type alias Enemy =
   { radius : Float
   , parts : List(Bool)
   }
 
 type alias Game =
-  { 
+  {
     player : Player
   , direction : Direction
   , enemies: List(Enemy)
@@ -53,7 +53,7 @@ type alias Colors =
 type Msg
   = Step Time
   | KeyboardExtraMsg Keyboard.Msg
-  | Noop
+
 
 (gameWidth, gameHeight) = (1024, 576) -- 16:9
 (halfWidth, halfHeight) = (gameWidth/2, gameHeight/2)
@@ -70,7 +70,7 @@ enemyThickness = 30
 updatePlayerAngle: Float -> Direction -> Float
 updatePlayerAngle angle dir =
   let
-    sign = 
+    sign =
       if dir == Left then 1
       else if dir == Right then -1
       else 0
@@ -106,9 +106,9 @@ updateProgress {state,progress} =
     _ -> progress
 
 updateMsRunning: Time -> Game -> Time
-updateMsRunning timestamp game = 
+updateMsRunning timestamp game =
   case game.state of
-    Play -> game.msRunning + timestamp - game.timeTick 
+    Play -> game.msRunning + timestamp - game.timeTick
     NewGame -> 0.0
     _ -> game.msRunning
 
@@ -149,7 +149,7 @@ updateEnemies game =
   
 
 updateEnemySpeed: Game -> Float
-updateEnemySpeed game = 
+updateEnemySpeed game =
   Debug.log "enemy speed" (2 + (toFloat game.progress)/1000)
 
 {-| Updates the game state on a keyboard command -}
@@ -161,7 +161,7 @@ onUserInput keyMsg game =
       Keyboard.update keyMsg game.keyboardModel
     spacebar = Keyboard.isPressed Keyboard.Space keyboardModel &&
       not (Keyboard.isPressed Keyboard.Space game.keyboardModel)
-    direction = 
+    direction =
       if (Keyboard.arrows keyboardModel).x < 0 then Left
       else if (Keyboard.arrows keyboardModel).x > 0 then Right
       else Still
@@ -170,8 +170,7 @@ onUserInput keyMsg game =
         NewGame -> if spacebar then Play else NewGame
         Play -> if spacebar then Pause else Play
         GameOver -> if spacebar then NewGame else GameOver
-        Pause -> if spacebar then Resume else Pause
-        _ -> game.state
+        Pause -> if spacebar then Play else Pause
   in
     ( { game | keyboardModel = keyboardModel
              , direction = direction
@@ -187,7 +186,6 @@ onFrame time game =
     nextState =
       case game.state of
         NewGame -> NewGame
-        Resume -> Play
         Play -> if isGameOver game then GameOver else Play
         _ -> game.state
   in
@@ -211,7 +209,6 @@ update msg game =
   case msg of
     KeyboardExtraMsg keyMsg -> onUserInput keyMsg game
     Step time -> onFrame time game
-    _ -> (game, Cmd.none)
 
 
 
@@ -227,7 +224,7 @@ moveRadial angle radius =
 
 makePlayer : Player -> Form
 makePlayer player =
-  let 
+  let
     angle = player.angle - degrees 30
   in
     ngon 3 10
@@ -250,9 +247,9 @@ makeEnemy color enemy =
   let
     base = 2.0 * (enemy.radius +enemyThickness) / (sqrt 3)
     makeEnemyPart : Int -> Form
-    makeEnemyPart index = 
-      trapezoid base enemyThickness color 
-        |> rotate (degrees <| toFloat (90 + index * 60)) 
+    makeEnemyPart index =
+      trapezoid base enemyThickness color
+        |> rotate (degrees <| toFloat (90 + index * 60))
         |> moveRadial (degrees <| toFloat (index * 60)) (enemy.radius +enemyThickness)
 
     -- color = (hsl (radius/100) 1 0.5)
@@ -262,7 +259,7 @@ makeEnemy color enemy =
 
 makeEnemies : Color -> List(Enemy) -> List(Form)
 makeEnemies color enemys =
-  map (makeEnemy color) enemys 
+  map (makeEnemy color) enemys
 
 
 
@@ -325,7 +322,7 @@ view game =
     field = append
         [ makeField colors
         , makePlayer game.player
-        , group <| makeEnemies colors.bright game.enemies   
+        , group <| makeEnemies colors.bright game.enemies
         ]
         (makeCenterHole colors game)
       |> group
@@ -367,9 +364,7 @@ init =
       , autoRotateAngle = 0.0
       , autoRotateSpeed = 0.0
       }
-    , Cmd.batch
-      [ Cmd.map KeyboardExtraMsg keyboardCmd
-      ]
+    , Cmd.map KeyboardExtraMsg keyboardCmd
     )
 
 
