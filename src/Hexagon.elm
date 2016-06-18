@@ -11,11 +11,6 @@ import Html
 
 -- MODEL
 
-type Msg
-  = Step Time
-  | KeyboardExtraMsg Keyboard.Msg
-  | Noop
-
 type alias Player =
   { angle: Float }
 
@@ -27,6 +22,11 @@ type alias Game =
   , direction : Direction
   , keyboardModel : Keyboard.Model
   }
+
+type Msg
+  = Step Time
+  | KeyboardExtraMsg Keyboard.Msg
+  | Noop
 
 (gameWidth, gameHeight) = (1024, 576) -- 16:9
 (halfWidth, halfHeight) = (gameWidth/2, gameHeight/2)
