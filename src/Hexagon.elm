@@ -35,7 +35,6 @@ type alias Game =
   , msRunning : Float
   , autoRotateAngle : Float
   , autoRotateSpeed : Float
-  , keyboardModel : Keyboard.Model
   }
 
 type alias Colors =
