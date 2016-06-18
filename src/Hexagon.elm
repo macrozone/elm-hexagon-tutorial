@@ -16,12 +16,11 @@ import Html
 
 
 -- MODEL
-type State = NewGame | Play | GameOver | Starting | Pause | Resume
+type State = NewGame | Play | GameOver | Pause
 
 type Msg
   = Step Time
   | KeyboardExtraMsg Keyboard.Msg
-  | Noop
 
 
 type alias Player =
@@ -29,7 +28,7 @@ type alias Player =
 
 type Direction = Left | Right | Still
 
-type alias Enemy = 
+type alias Enemy =
   { radius : Float
   , parts : List(Bool)
   }
@@ -48,7 +47,6 @@ type alias Game =
   , msRunning : Float
   , autoRotateAngle : Float
   , autoRotateSpeed : Float
-  , keyboardModel : Keyboard.Model
   }
 
 type alias Colors =
@@ -56,6 +54,7 @@ type alias Colors =
   , medium: Color
   , bright : Color
   }
+
 
 (gameWidth, gameHeight) = (1024, 576) -- 16:9
 (halfWidth, halfHeight) = (gameWidth/2, gameHeight/2)
@@ -74,7 +73,7 @@ startMessage = "SPACE to start, &larr;&rarr; to move"
 updatePlayerAngle: Float -> Direction -> Float
 updatePlayerAngle angle dir =
   let
-    sign = 
+    sign =
       if dir == Left then 1
       else if dir == Right then -1
       else 0
@@ -149,7 +148,7 @@ updateEnemies game =
     ]
 
 updateEnemySpeed: Game -> Float
-updateEnemySpeed game = 
+updateEnemySpeed game =
   Debug.log "enemy speed" (2 + (toFloat game.progress)/1000)
 
 {-| Updates the game state on a keyboard command -}
@@ -161,17 +160,16 @@ onUserInput keyMsg game =
       Keyboard.update keyMsg game.keyboardModel
     spacebar = Keyboard.isPressed Keyboard.Space keyboardModel &&
       not (Keyboard.isPressed Keyboard.Space game.keyboardModel)
-    direction = 
+    direction =
       if (Keyboard.arrows keyboardModel).x < 0 then Left
       else if (Keyboard.arrows keyboardModel).x > 0 then Right
       else Still
     nextState =
       case game.state of
-        NewGame -> if spacebar then Starting else NewGame
+        NewGame -> if spacebar then Play else NewGame
         Play -> if spacebar then Pause else Play
         GameOver -> if spacebar then NewGame else GameOver
-        Pause -> if spacebar then Resume else Pause
-        _ -> game.state
+        Pause -> if spacebar then Play else Pause
   in
     ( { game | keyboardModel = keyboardModel
              , direction = direction
@@ -186,8 +184,7 @@ onFrame time game =
     nextCmd = Cmd.none
     nextState =
       case game.state of
-        Starting -> Pause
-        Resume -> Play
+        NewGame -> NewGame
         Play -> if isGameOver game then GameOver else Play
         _ -> game.state
   in
@@ -211,7 +208,6 @@ update msg game =
   case msg of
     KeyboardExtraMsg keyMsg -> onUserInput keyMsg game
     Step time -> onFrame time game
-    _ -> (game, Cmd.none)
 
 
 -- VIEW
@@ -389,9 +385,9 @@ init =
     ( { player = Player (degrees 30)
       , keyboardModel = keyboardModel
       , direction = Still
+      , state = NewGame
       , enemies = []
       , enemySpeed = 0.0
-      , state = Starting
       , progress = 0
       , timeStart = 0.0
       , timeTick = 0.0
@@ -399,9 +395,7 @@ init =
       , autoRotateAngle = 0.0
       , autoRotateSpeed = 0.0
       }
-    , Cmd.batch
-      [ Cmd.map KeyboardExtraMsg keyboardCmd
-      ]
+    , Cmd.map KeyboardExtraMsg keyboardCmd
     )
 
 
