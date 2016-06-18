@@ -9,18 +9,24 @@ import Color exposing (..)
 
 import Debug
 import Text
+import Audio exposing (PlaybackOptions, defaultPlaybackOptions, Sound)
+
 import String exposing (padLeft)
 
 import Html.App as App
 import Html
+import Task exposing (Task, andThen)
 
 
 -- MODEL
-type State = NewGame | Play | GameOver | Pause
+type State = Loading | NewGame | Starting | Play | Pausing | Pause | Resume | GameOver
 
 type Msg
   = Step Time
   | KeyboardExtraMsg Keyboard.Msg
+  | MusicLoaded Sound
+  | Error String
+  | Noop
 
 
 type alias Player =
@@ -47,6 +53,8 @@ type alias Game =
   , msRunning : Float
   , autoRotateAngle : Float
   , autoRotateSpeed : Float
+  , hasBass : Bool
+  , music: Maybe Sound
   }
 
 type alias Colors =
@@ -65,6 +73,47 @@ playerRadius = gameWidth / 10.0
 
 enemyThickness = 30
 startMessage = "SPACE to start, &larr;&rarr; to move"
+
+
+beat = 138.0 |> bpm
+beatAmplitude = 0.06
+beatPhase = 270 |> degrees
+
+-- Calculate Beat Per Minute
+bpm : Float -> Float
+bpm beat =
+  (2.0 * pi * beat / 3600 )
+
+pump : Int -> Float
+pump progress = beatAmplitude * (beat * toFloat progress + beatPhase |> sin)
+
+-- MUSIC
+
+hasBass : Time -> Bool
+hasBass time =
+  if time < 20894 then False
+  else if time < 41976 then True
+  else if time < 55672 then False
+  else if time < 67842 then True
+  else if time < 187846 then False
+  else if time < 215938 then True
+  else False
+
+
+loadSound : Task String Sound
+loadSound = Audio.loadSound "music/shinytech.mp3"
+
+
+playbackOptions = {
+  defaultPlaybackOptions | loop = True, startAt = Nothing }
+
+playSound : Sound -> PlaybackOptions -> Cmd Msg
+playSound sound options =
+  Task.perform Error (always Noop) <| Audio.playSound options sound
+
+stopSound : Sound -> Cmd Msg
+stopSound sound =
+  Task.perform (always Noop) (always Noop) <| Audio.stopSound sound
 
 
 
@@ -89,10 +138,10 @@ updatePlayerAngle angle dir =
 
 colidesWith: Player -> Enemy -> Bool
 colidesWith player enemy =
-  let 
+  let
     collidesAtIndex: Int -> Bool
-    collidesAtIndex index = 
-      let 
+    collidesAtIndex index =
+      let
         fromAngle = (toFloat index) * 60
         toAngle = ((toFloat index)+1)*60
         playerDegrees = player.angle * 360 / (2*pi)
@@ -144,8 +193,7 @@ updateAutoRotateAngle {autoRotateAngle, autoRotateSpeed} =
 
 updateAutoRotateSpeed: Game -> Float
 updateAutoRotateSpeed {progress, autoRotateSpeed} =
-  0.02 * sin (toFloat progress * 0.005 |> Debug.log "φ")
-  |> Debug.log "autoRotateSpeed"
+  0.02 * sin (toFloat progress * 0.005)
 
 updateEnemies: Game -> List(Enemy)
 updateEnemies game =
@@ -176,12 +224,12 @@ updateEnemies game =
 
 updateEnemySpeed: Game -> Float
 updateEnemySpeed game =
-  Debug.log "enemy speed" (2 + (toFloat game.progress)/1000)
+  2 + (toFloat game.progress)/1000
+
 
 {-| Updates the game state on a keyboard command -}
 onUserInput : Keyboard.Msg -> Game -> (Game, Cmd Msg)
 onUserInput keyMsg game =
-
   let
     ( keyboardModel, keyboardCmd ) =
       Keyboard.update keyMsg game.keyboardModel
@@ -193,10 +241,11 @@ onUserInput keyMsg game =
       else Still
     nextState =
       case game.state of
-        NewGame -> if spacebar then Play else NewGame
-        Play -> if spacebar then Pause else Play
+        NewGame -> if spacebar then Starting else NewGame
+        Play -> if spacebar then Pausing else Play
         GameOver -> if spacebar then NewGame else GameOver
-        Pause -> if spacebar then Play else Pause
+        Pause -> if spacebar then Resume else Pause
+        _ -> game.state
   in
     ( { game | keyboardModel = keyboardModel
              , direction = direction
@@ -208,24 +257,31 @@ onUserInput keyMsg game =
 onFrame : Time -> Game -> (Game, Cmd Msg)
 onFrame time game =
   let
-    nextCmd = Cmd.none
-    nextState =
-      case game.state of
-        NewGame -> NewGame
-        Play -> if isGameOver game then GameOver else Play
-        _ -> game.state
+    (nextState, nextCmd) =
+      case game.music of
+        Nothing -> (Loading, Cmd.none)
+        Just music ->
+          case game.state of
+            Starting -> (Play, playSound music { playbackOptions | startAt = Just 0 })
+            Resume -> (Play, playSound music playbackOptions)
+            Pausing -> (Pause, stopSound music)
+            Play -> if isGameOver game
+              then (GameOver, stopSound music)
+              else (Play, Cmd.none)
+            _ -> (game.state, Cmd.none)
   in
     ( { game |
         player = updatePlayer game.direction game
       , enemies = updateEnemies game
       , enemySpeed = updateEnemySpeed game
-      , state = Debug.log "state" nextState
-      , progress = Debug.log "progress" (updateProgress game)
-      , timeStart = if game.state == NewGame then time else game.timeStart
+      , state =  nextState
+      , progress = updateProgress game
+      , timeStart = if game.state == Starting then time else game.timeStart
       , timeTick = time
-      , msRunning = Debug.log "msRunning" (updateMsRunning time game)
+      , msRunning = updateMsRunning time game
       , autoRotateAngle = updateAutoRotateAngle game
       , autoRotateSpeed = updateAutoRotateSpeed game
+      , hasBass = hasBass game.msRunning
     }, nextCmd )
 
 
@@ -235,6 +291,13 @@ update msg game =
   case msg of
     KeyboardExtraMsg keyMsg -> onUserInput keyMsg game
     Step time -> onFrame time game
+    MusicLoaded music ->
+      ( { game |
+          state = NewGame,
+          music = Just music
+        }, Cmd.none)
+    Error message -> Debug.crash message
+    _ -> (game, Cmd.none)
 
 
 -- VIEW
@@ -318,7 +381,11 @@ makeField colors =
 makeCenterHole : Colors -> Game -> List Form
 makeCenterHole colors game =
   let
-    shape = ngon 6 60
+    bassAdd = if game.hasBass then
+        100.0 * beatAmplitude
+      else
+        100.0 * beatAmplitude * (beat * toFloat game.progress |> sin)
+    shape = ngon 6 (60 + bassAdd)
     line = solid colors.bright
   in
     [ shape
@@ -346,6 +413,12 @@ makeTextBox size string =
     |> Text.monospace
     |> Text.height size
     |> leftAligned
+beatPulse : Game -> Form -> Form
+beatPulse game =
+  if game.hasBass then
+    scale (1 + beatAmplitude * (beat * toFloat game.progress |> sin))
+  else
+    identity
 
 formatTime : Time -> String
 formatTime running =
@@ -367,6 +440,7 @@ view game =
       |> makeTextBox 50
     message = makeTextBox 50 <|
       case game.state of
+        Loading -> "Loading..."
         GameOver -> "Game Over"
         Pause -> "Pause"
         _ -> ""
@@ -382,7 +456,7 @@ view game =
     container gameWidth gameHeight middle <|
     collage gameWidth gameHeight
       [ bg
-      , field |> rotate game.autoRotateAngle
+      , field |> rotate game.autoRotateAngle |> beatPulse game
       , toForm message |> move (0, 40)
       , toForm score |> move (100 - halfWidth, halfHeight - 40)
       , toForm (
@@ -421,8 +495,13 @@ init =
       , msRunning = 0.0
       , autoRotateAngle = 0.0
       , autoRotateSpeed = 0.0
+      , hasBass = False
+      , music = Nothing
       }
-    , Cmd.map KeyboardExtraMsg keyboardCmd
+    , Cmd.batch
+      [ Cmd.map KeyboardExtraMsg keyboardCmd
+      , Task.perform Error MusicLoaded loadSound
+      ]
     )
 
 
@@ -433,4 +512,3 @@ main =
   , update = update
   , view = view
   , subscriptions = subscriptions }
-
