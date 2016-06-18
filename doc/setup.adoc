@@ -1,0 +1,11 @@
+Project Setup
+=============
+
+Create a new folder for the project and `cd` into it.
+
+Every Elm project needs an `elm-package.json` file. This is similar to the node package.json file.
+It holds all meta information about the project. Copy and paste the following content:
+
+{% codesnippet "https://raw.githubusercontent.com/sbaechler/polygon/master/elm-package.json" %}{% endcodesnippet %}
+
+

@@ -1,5 +1,5 @@
-Music and Bass Shake
---------------------
+Music and Bass Shake[[music]]
+-----------------------------
 
 In Hexagon, the music is an important element of the game. It is even part of the game mechanics:
 Whenever there is a bass sequence, the whole stage is shaking.
@@ -7,41 +7,158 @@ Whenever there is a bass sequence, the whole stage is shaking.
 The original game music is copyrighted. Therefore we provide an alternative track
 for this tutorial that has a Creative Commons license.
 
-The audio library that we are using is another dependency that has to be installed.
-
+There is an issue with Safari, so use a different Browser for this.
 
 ## Download the Music
 The track that we are going to use is called "Shiny Tech" by Kevin MacLeod.
-Download it from the [Incompetech](http://incompetech.com/music/royalty-free/index.html?collection=12&page=1)
-website.
+Download it from the
+http://incompetech.com/music/royalty-free/index.html?collection=12&page=1[Incompetech] website.
+
+Rename it to `shinytech.mp3` and copy it into a `src/music` folder.
 
 ---
 
 If you live in a country where it is allowed to download copyrighted material
 for private use, such as in Switzerland, then you can actually use the original
 track.
-Download the Hexagon SWF file from [here]()
+Download the Hexagon SWF file from http://terrycavanaghgames.com/hexagon/hexagon.swf[here]
 and unzip it. (On a Mac, just double-click the file.)
 The music is the file "Sound 11".
+Rename the downloaded file to "music.mp3" and copy it into the music folder.
 
 ---
 
 
-Create a folder called "music" in your source directory. Rename the downloaded
-file to "music.mp3" and copy it into the music folder.
-
-
-## Fix the Elm Debugger
-
 ## Install the audio library
+The audio library abstracts the HTML5 Audio tag for the elm language. It uses native bindings.
+Unfortunately Elm discourages the use of native bindings for 3rd party libraries. But until audio
+support is available in core we have to use one.
 
-## Add the track meta information
+It is not possible to install such libraries through elm-package. So we have to use git
+or download it ourselves. We copy the `elm-audio` library in a folder called `lib/elm-audio`.
+
+The easiest way is to do this with git. Create the folder `lib` in your project directory.
+Then clone the git repository:
+
+    git clone https://github.com/xarvh/elm-audio.git lib/elm-audio
+
+If you are already using git for this tutorial, then you can add it as a submodule:
+
+    git submodule add https://github.com/xarvh/elm-audio.git lib/elm-audio
+
+This is not enogh though. Elm expects the native module to be named after the package.
+So open the file `elm-audio/src/Native/Audio.js` and change the name of the global function
+to match the name that you gave your project in `elm-package.json` in the `repository` field.
+It uses the syntax `_<username>$<project>$Native_Audio`.
+
+While we are here, we can add a few strategic console.log statements for debugging:
+ * Inside the `oncanplaythrough()` method which fires when the audio has been loaded completely
+ * Inside the `playSound` and `stopSound` method.
+
+
+## Cue the music
+
+Import the audio and the task module:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="14:15" %}{% endcodesnippet %}
+
+The music should play when the game state is `Play` and pause for all other
+states. The music should restart at the beginning whenever a game is
+restarted. This means we have to cue the audio whenever a game is restarted.
+
+Therefore we have to create a few more states. Those states are short-lived. They
+are only used to cue our side-effect tasks that start and stop the music.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:24" %}{% endcodesnippet %}
+
+The reference to the music object has to be added to the model, our Game object. Because it is the
+result of a Task, it might have failed. So the music property is an optional `Maybe Sound` type.
+Add a `hasBass : Bool` property as well.
+
+The music property is initialized with the value `Nothing` in the `init` method. `hasBass` is set to
+`False`.
+
+The loading of the music file is a Task as well. It sends of the message `MusicLoaded` when the
+mp3 has been downloaded (When the browser has fired the `canplaythrough` event).
+The task could also fail, therefore we add an `Error` message. A `Noop`
+message is needed as well as a callback for the stop command.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:24" %}{% endcodesnippet %}
+
+[source,elm]
+----
+loadSound : Task String Sound
+loadSound = Audio.loadSound "music/music.mp3"
+----
+
+The audio library exposes a `Sound` type wich is a reference to a HTML5 Audio tag. The
+`PlaybackOptions` object has three attributes: Volume, start and loop.
+
+We set loop to True and startAt to Nothing, which means that it continues playing from its current
+position.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:24" %}{% endcodesnippet %}
+
+The `playSound` and `stopSound` functions start and stop the music. They take a reference to the
+sound object and an options object and return a command of type message.
+
+They are tasks because playing audio is a side-effect. In case of an error, the Error message is
+sent. In case of success (the audio is done playing) the Noop message is sent.
+We use anonymous functions to define the callbacks.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:24" %}{% endcodesnippet %}
+
+With all the new states the update methods become a bit more complex. However, it is still
+easily readable and understandable.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:24" %}{% endcodesnippet %}
+
+We add the new intermediate helper states. In the `onUserInput` function, update the `nextState`
+assignment so it uses the new states.
+
+In the `onFrame` function we are going to output new commands as well, so we assign those in the
+`let` block. At first we have to make sure, that the music is not `Nothing`. (It won't compile if
+this check was missing.) +
+In the `Starting` state the music is played from the beginning. The `startAt` value is a `Maybe` as
+well so we have to use `Just 0` here.
+The other states should be self-explanatory.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:24" %}{% endcodesnippet %}
+
+The update method needs to handle the new states. When the `MusicLoaded` message arrives,
+the game state is set to `NewGame` and the music is stored in the model. +
+In case of an error we just throw it.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:24" %}{% endcodesnippet %}
+
+Finally we have to load the audio file in the init method. We use `Cmd.batch` to queue multiple
+commands.
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:24" %}{% endcodesnippet %}
+
+
+
+## Bass pump
 The playing field should pump in sync with the beat. Therefore we have to define
 the speed of the track and the sections where there is a bass part.
 
 Add three variables for beat, amplitude and phase:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="72:74" %}{% endcodesnippet %}
+[source,elm]
+----
+beat = 138.0 |> bpm
+beatAmplitude = 0.06
+beatPhase = 270 |> degrees
+----
+
+The original music requires slightly different values:
+
+[source,elm]
+----
+beat = 130.0 |> bpm
+beatAmplitude = 0.06
+beatPhase = 180 |> degrees
+----
 
 Phase lets you adjust the start of the pumping so it matches the music exactly.
 
@@ -49,37 +166,49 @@ The beat is given in bpm which has to be calculated first using this function:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="72:74" %}{% endcodesnippet %}
 
+
+We have already added a `hasBass : Bool` property to the Game model and `hasBass = False`
+to the defaultGame object.
+
 Next we add a function `hasBass` that takes a time value and returns `True` if there
 is a bass passage or `False` otherwise.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Music.elm", lines="14:21" %}{% endcodesnippet %}
+[source,elm]
+----
+hasBass : Time -> Bool
+hasBass time =
+  if time < 20894 then False
+  else if time < 41976 then True
+  else if time < 55672 then False
+  else if time < 67842 then True
+  else if time < 187846 then False
+  else if time < 215938 then True
+  else False
+----
 
 For the original track use those values:
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Music.elm", lines="14:21" %}{% endcodesnippet %}
 
-
-## Cue the music
-
-The music should play when the game state is `Play` and pause for all other
-states. The music should restart at the beginning whenever a game is
-restarted. This means we have to cue the audio whenever a game is restarted.
-
-That's where the `Starting` state comes in. When the game is in this state
-the music is cued back to zero.
-
-Theoretically the music should be cued to the beginning when it has reached
-the end. That functionality is left as an excercise to the user.
-
-## Bass pump
-Add a `hasBass : Bool` property to the Game model and `hasBass = False`
-to the defaultGame object.
+[source,elm]
+----
+hasBass time =
+  if time < 14760 then False
+  else if time < 44313 then True
+  else if time < 51668 then False
+  else if time < 129193 then True
+  else if time < 14387 then False
+  else True
+----
 
 The hasBass value is set in the `update` method:
 
-  hasBass = Music.hasBass game.msRunning
+  { game |
+  ...
+  , hasBass = Music.hasBass game.msRunning
 
-The `beatPulse` method takes the game state and a Form (the playing field)
-as input and returns a Form (the pulsating playing field).
+
+The `beatPulse` method takes the game state and returns a function that goes
+from Form -> Form.
+The input is the playing field. The output is either the same or the pulsating playing field.
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Music.elm", lines="14:21" %}{% endcodesnippet %}
 
