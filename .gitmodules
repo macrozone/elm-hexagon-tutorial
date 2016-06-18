@@ -1,0 +1,3 @@
+[submodule "lib/elm-audio"]
+	path = lib/elm-audio
+	url = https://github.com/xarvh/elm-audio.git
