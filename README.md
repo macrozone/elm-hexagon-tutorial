@@ -3,6 +3,9 @@
 
 ## Development
 Install the audio library: `git submodule update --init`.
+Open `lib/elm-audio/src/Native/Audio.js` and change the first line to:
+
+    var _sbaechler$polygon$Native_Audio = function() {
 
 Start local server in root directory:
 
