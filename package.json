@@ -1,11 +1,11 @@
 {
   "private": true,
   "scripts": {
-    "build": "elm-make --yes src/Game.elm --output=./elm.js && cp index.template.html index.html",
-    "watch": "node watch.js",
-    "server": "python -m SimpleHTTPServer 5000"
+    "build": "elm-make src/Hexagon.elm --output=public/index.html",
+    "server": "elm-reactor",
+    "setup": "elm-package install && git submodule update --init"
   },
   "dependencies": {
-    "watch": "^0.16.0"
+    "elm": "^0.17.0"
   }
 }
