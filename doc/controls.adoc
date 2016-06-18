@@ -9,16 +9,24 @@ on the periphery of an imaginary circle.
 
 We first setup the model for the `Game` which contains the `Player` with the position (represented by an angle), the current 'direction' in which the player is moving and a `keyboardModel`:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="1:27", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="1:25", language="elm" %}{% endcodesnippet %}
+
+Since Elm 0.17 we no longer use signals. Instead we use a publication/subscription-pattern that uses messages. We declare the type of the message here which can:
+
+* a `Step` with a timestamp. This represents a frame of the game-loop.
+* a `KeyboardExtraMsg` which is a keyboard-input
+* a `Noop` which will do nothing
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="26:30", language="elm" %}{% endcodesnippet %}
 
 We'll also need some constant values, e.g. the screen-sizes and the radius of the player's circle:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="28:34", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="30:36", language="elm" %}{% endcodesnippet %}
 
 
 == Update
 
-We now define how the state of the game can change over time. This state-transition is done with the function `update : (Time, Input) -> Game -> Game`. This function will receive our `Input` as well as a `Time`, which we do not need right now:
+We now define how the state of the game can change over time. This state-transition is done with the function `update : Msg -> Game -> Game`. This function will receive our `Input` as well as a `Time`, which we do not need right now:
 
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="61:68", language="elm" %}{% endcodesnippet %}
