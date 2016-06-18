@@ -58,11 +58,13 @@ The function `view : Game -> Html.Html Msg` is the main function of the view par
 
 With the `Model`, the `Update`-function and the `View` in place we are now able to wire everything together.
 
-We use the outdated concept of `Signals` in this tutorial and might replace it with the newer concept of `Subscriptions`. We therefore won't go into details here, but basically a `Signal` is a value that changes over time. Elm provides some built-in `Signals` like `Keyboard.arrows` which returns `{x: Int, y: Int}` where x represents up and down (1, -1) and y left and right. We will also use a `Keyboard.space` signal (for play / pause) and a timestamp: 
+For this we need to construct `subscriptions`. But let's take a look at the `main`-function first (`main` is the starting point for every elm-application):
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="98:120", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="161:167", language="elm" %}{% endcodesnippet %}
 
-The function `main` is the starting-point of any elm-application. As you can see, it combines the `view`, the `update` and the `input` function to "evolve" the `defaultGame`.
+You'll notice that besides a `subscriptions`-function we also need an init function that defines the initial state of our application:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="144:159", language="elm" %}{% endcodesnippet %}
 
 == Run
 
