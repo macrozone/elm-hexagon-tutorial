@@ -48,9 +48,9 @@ Elm provides different libraries to output html or to render 2d-graphics on a ca
 
 The `Player` will be a small triangle that we rotate around the game's center. A black background will represent our game-screen. We also change the `Player`'s color depending on the angle (for fun and profit):
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="71:87", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="101:119", language="elm" %}{% endcodesnippet %}
 
-The function `view : (Int,Int) -> Game -> Element` is the main function of the view part of our application. It receives not only the game-state but also the current size of the window (represented by the first tupel-parameter):
+The function `view : Game -> Html.Html Msg` is the main function of the view part of our application. It receives not only the game-state but also the current size of the window (represented by the first tupel-parameter):
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="88:97", language="elm" %}{% endcodesnippet %}
 
