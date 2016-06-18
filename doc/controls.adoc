@@ -66,6 +66,10 @@ You'll notice that besides a `subscriptions`-function we also need an init funct
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="144:159", language="elm" %}{% endcodesnippet %}
 
+Finally the `subscriptions`-function will subscribe to keyboard-events and `AnimationFrame`-events:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="134:142", language="elm" %}{% endcodesnippet %}
+
 == Run
 
 Simply start `elm-reactor` in your project directory, open your browser at `http://0.0.0.0:8000/` and navigate to your sourcefile. You should see your small ship and should be able to control it with the arrow-keys <-- and -->.
