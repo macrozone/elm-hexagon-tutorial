@@ -13,7 +13,7 @@ import Html
 
 
 -- MODEL
-type State = NewGame | Play | GameOver | Pause | Resume
+type State = NewGame | Play | GameOver | Pause
 
 
 -- MODEL
@@ -23,7 +23,7 @@ type alias Player =
 
 type Direction = Left | Right | Still
 
-type alias Enemy = 
+type alias Enemy =
   { radius : Float
   , parts : List(Bool)
   }
@@ -125,14 +125,14 @@ updateEnemies: Game -> List(Enemy)
 updateEnemies game =
   let
     enemyDistance = 300
-    partsFor index = 
+    partsFor index =
       case index of
         0 -> [True, True, True, False, True, True]
         1 -> [True, True, True, False, True, True]
         2 -> [False, True, False, True, True, True]
         3 -> [False, True, True, True, True, True]
         _ -> [True, False, True, True, True, True]
-    radiusFor index = 
+    radiusFor index =
       toFloat (enemyThickness + (iHalfWidth + round (( enemyDistance * (toFloat index)) - (toFloat game.progress) * game.enemySpeed)) % (enemyDistance * 5))
   in
    [
@@ -144,7 +144,7 @@ updateEnemies game =
     ]
 
 updateEnemySpeed: Game -> Float
-updateEnemySpeed game = 
+updateEnemySpeed game =
   Debug.log "enemy speed" (2 + (toFloat game.progress)/1000)
 
 {-| Updates the game state on a keyboard command -}
@@ -165,8 +165,7 @@ onUserInput keyMsg game =
         NewGame -> if spacebar then Play else NewGame
         Play -> if spacebar then Pause else Play
         GameOver -> if spacebar then NewGame else GameOver
-        Pause -> if spacebar then Resume else Pause
-        _ -> game.state
+        Pause -> if spacebar then Play else Pause
   in
     ( { game | keyboardModel = keyboardModel
              , direction = direction
@@ -182,7 +181,6 @@ onFrame time game =
     nextState =
       case game.state of
         NewGame -> NewGame
-        Resume -> Play
         Play -> if isGameOver game then GameOver else Play
         _ -> game.state
   in
@@ -244,9 +242,9 @@ makeEnemy color enemy =
   let
     base = 2.0 * (enemy.radius +enemyThickness) / (sqrt 3)
     makeEnemyPart : Int -> Form
-    makeEnemyPart index = 
-      trapezoid base enemyThickness color 
-        |> rotate (degrees <| toFloat (90 + index * 60)) 
+    makeEnemyPart index =
+      trapezoid base enemyThickness color
+        |> rotate (degrees <| toFloat (90 + index * 60))
         |> moveRadial (degrees <| toFloat (index * 60)) (enemy.radius +enemyThickness)
 
     -- color = (hsl (radius/100) 1 0.5)
@@ -256,7 +254,7 @@ makeEnemy color enemy =
 
 makeEnemies : Color -> List(Enemy) -> List(Form)
 makeEnemies color enemys =
-  map (makeEnemy color) enemys 
+  map (makeEnemy color) enemys
 
 
 
@@ -319,7 +317,7 @@ view game =
     field = append
         [ makeField colors
         , makePlayer game.player
-        , group <| makeEnemies colors.bright game.enemies   
+        , group <| makeEnemies colors.bright game.enemies
         ]
         (makeCenterHole colors game)
       |> group
