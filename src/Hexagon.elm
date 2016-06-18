@@ -29,7 +29,7 @@ type alias Enemy =
   }
 
 type alias Game =
-  { 
+  {
     player : Player
   , direction : Direction
   , enemies: List(Enemy)
@@ -53,7 +53,7 @@ type alias Colors =
 type Msg
   = Step Time
   | KeyboardExtraMsg Keyboard.Msg
-  | Noop
+
 
 (gameWidth, gameHeight) = (1024, 576) -- 16:9
 (halfWidth, halfHeight) = (gameWidth/2, gameHeight/2)
@@ -70,7 +70,7 @@ enemyThickness = 30
 updatePlayerAngle: Float -> Direction -> Float
 updatePlayerAngle angle dir =
   let
-    sign = 
+    sign =
       if dir == Left then 1
       else if dir == Right then -1
       else 0
@@ -106,9 +106,9 @@ updateProgress {state,progress} =
     _ -> progress
 
 updateMsRunning: Time -> Game -> Time
-updateMsRunning timestamp game = 
+updateMsRunning timestamp game =
   case game.state of
-    Play -> game.msRunning + timestamp - game.timeTick 
+    Play -> game.msRunning + timestamp - game.timeTick
     NewGame -> 0.0
     _ -> game.msRunning
 
@@ -156,7 +156,7 @@ onUserInput keyMsg game =
       Keyboard.update keyMsg game.keyboardModel
     spacebar = Keyboard.isPressed Keyboard.Space keyboardModel &&
       not (Keyboard.isPressed Keyboard.Space game.keyboardModel)
-    direction = 
+    direction =
       if (Keyboard.arrows keyboardModel).x < 0 then Left
       else if (Keyboard.arrows keyboardModel).x > 0 then Right
       else Still
@@ -206,7 +206,6 @@ update msg game =
   case msg of
     KeyboardExtraMsg keyMsg -> onUserInput keyMsg game
     Step time -> onFrame time game
-    _ -> (game, Cmd.none)
 
 
 
@@ -222,7 +221,7 @@ moveRadial angle radius =
 
 makePlayer : Player -> Form
 makePlayer player =
-  let 
+  let
     angle = player.angle - degrees 30
   in
     ngon 3 10
@@ -362,9 +361,7 @@ init =
       , autoRotateAngle = 0.0
       , autoRotateSpeed = 0.0
       }
-    , Cmd.batch
-      [ Cmd.map KeyboardExtraMsg keyboardCmd
-      ]
+    , Cmd.map KeyboardExtraMsg keyboardCmd
     )
 
 
