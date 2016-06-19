@@ -210,7 +210,7 @@ The `beatPulse` method takes the game state and returns a function that goes
 from Form -> Form.
 The input is the playing field. The output is either the same or the pulsating playing field.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Music.elm", lines="14:21" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="14:21" %}{% endcodesnippet %}
 
 The `pump` method calculates the value that is passed to the scale method using
 a sin function. +
@@ -219,12 +219,12 @@ between -1 and 1 so we are multiplying it with
 `beatAmplitude` to specify how much the stage should shake. +
 The `beatPhase` value is used to adjust the timing so it matches with the music.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Music.elm", lines="14:21" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="14:21" %}{% endcodesnippet %}
 
 The center hole is always pulsating but it should be in sync with the rest of the
 stage during a bass sequence. For that we adjust the `makeCenterHole` function.
 Whenever there is a bass sequence the radius of the center piece should remain constant
 otherwise it should be pumping.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Music.elm", lines="14:21" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="14:21" %}{% endcodesnippet %}
 
