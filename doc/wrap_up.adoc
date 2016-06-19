@@ -1,3 +1,20 @@
 Wrap Up
 -------
 
+That's all, folks. We hope you enjoyed writing a simple game in Elm. Feel free to optimize it and
+play around with the code.
+
+Elm is still a work in progress and the API is most likely going to change. The ecosystem around
+the language should grow and tools improve.
+
+If you ever get stuck writing your program, you can ask for help in the Elm https://elmlang.slack.com[Slack channel].
+There is always someone there to help.
+
+Did you like the game and want to try the proper version? It is available on
+http://store.steampowered.com/app/221640/[Steam],
+in the https://itunes.apple.com/ch/app/super-hexagon/id549027629?mt=8[iTunes store] and the
+https://play.google.com/store/apps/details?id=com.distractionware.superhexagon[Play store].
+
+If you find an issue with the tutorial, open a Ticket on our
+https://github.com/macrozone/elm-hexagon-tutorial/issues[GitHub page]. For general feedback you
+can send a message to @sbaechler in the Elm slack channel or start a discussion on the GitBook page.
