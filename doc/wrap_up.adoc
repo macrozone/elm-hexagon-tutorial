@@ -17,4 +17,5 @@ https://play.google.com/store/apps/details?id=com.distractionware.superhexagon[P
 
 If you find an issue with the tutorial, open a Ticket on our
 https://github.com/macrozone/elm-hexagon-tutorial/issues[GitHub page]. For general feedback you
-can send a message to @sbaechler in the Elm slack channel or start a discussion on the GitBook page.
+can send a message to @sbaechler in the Elm slack channel or start a discussion on the
+https://www.gitbook.com/book/sbaechler/elm-hexagon/details[GitBook page].
