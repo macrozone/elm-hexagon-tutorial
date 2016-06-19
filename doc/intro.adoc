@@ -2,8 +2,10 @@ Elm Game Tutorial
 -----------------
 
 In this tutorial we are going to create a game in elm. The game is based on
-Terry Cavanagh's great arcade game http://terrycavanaghgames.com/hexagon/[Hexagon].
+the great arcade game http://terrycavanaghgames.com/hexagon/[Hexagon].
 That game was the prototype for the successful mobile game Super Hexagon.
+
+You can http://sbaechler.github.io/polygon/[check out the final result here]
 
 The tutorial requires some knowledge of the concept of functional programming.
 You should also have read the section about
@@ -24,3 +26,5 @@ see in chapter <<music.adoc#music,Music>>).
 
 The tutorial is is split up in seven chapters each with a special focus. At the end of each
 chapter you will have a running program.
+
+The authors wish to thank Terry Cavanagh for letting us use his game for this tutorial.

@@ -60,7 +60,7 @@ While we are here, we can add a few strategic console.log statements for debuggi
 
 Import the audio and the task module:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="14:15" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="12:13" %}{% endcodesnippet %}
 
 The music should play when the game state is `Play` and pause for all other
 states. The music should restart at the beginning whenever a game is
@@ -69,7 +69,7 @@ restarted. This means we have to cue the audio whenever a game is restarted.
 Therefore we have to create a few more states. Those states are short-lived. They
 are only used to cue our side-effect tasks that start and stop the music.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:24" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="21:22" %}{% endcodesnippet %}
 
 The reference to the music object has to be added to the model, our Game object. Because it is the
 result of a Task, it might have failed. So the music property is an optional `Maybe Sound` type.
@@ -83,13 +83,9 @@ mp3 has been downloaded (When the browser has fired the `canplaythrough` event).
 The task could also fail, therefore we add an `Error` message. A `Noop`
 message is needed as well as a callback for the stop command.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:24" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:29" %}{% endcodesnippet %}
 
-[source,elm]
-----
-loadSound : Task String Sound
-loadSound = Audio.loadSound "music/music.mp3"
-----
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="103:104" %}{% endcodesnippet %}
 
 The audio library exposes a `Sound` type wich is a reference to a HTML5 Audio tag. The
 `PlaybackOptions` object has three attributes: Volume, start and loop.
@@ -97,7 +93,7 @@ The audio library exposes a `Sound` type wich is a reference to a HTML5 Audio ta
 We set loop to True and startAt to Nothing, which means that it continues playing from its current
 position.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:24" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="107:108" %}{% endcodesnippet %}
 
 The `playSound` and `stopSound` functions start and stop the music. They take a reference to the
 sound object and an options object and return a command of type message.
@@ -106,12 +102,12 @@ They are tasks because playing audio is a side-effect. In case of an error, the 
 sent. In case of success (the audio is done playing) the Noop message is sent.
 We use anonymous functions to define the callbacks.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:24" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="110:116" %}{% endcodesnippet %}
 
-With all the new states the update methods become a bit more complex. However, it is still
+With all the new states the update methods become a bit more complex. However, they are still
 easily readable and understandable.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:24" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="230:254" %}{% endcodesnippet %}
 
 We add the new intermediate helper states. In the `onUserInput` function, update the `nextState`
 assignment so it uses the new states.
@@ -123,18 +119,18 @@ In the `Starting` state the music is played from the beginning. The `startAt` va
 well so we have to use `Just 0` here.
 The other states should be self-explanatory.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:24" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="256:285" %}{% endcodesnippet %}
 
 The update method needs to handle the new states. When the `MusicLoaded` message arrives,
 the game state is set to `NewGame` and the music is stored in the model. +
 In case of an error we just throw it.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:24" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="288:300" %}{% endcodesnippet %}
 
 Finally we have to load the audio file in the init method. We use `Cmd.batch` to queue multiple
 commands.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="24:24" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="482:506" %}{% endcodesnippet %}
 
 
 
@@ -164,7 +160,7 @@ Phase lets you adjust the start of the pumping so it matches the music exactly.
 
 The beat is given in bpm which has to be calculated first using this function:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="72:74" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="82:85" %}{% endcodesnippet %}
 
 
 We have already added a `hasBass : Bool` property to the Game model and `hasBass = False`
@@ -210,7 +206,7 @@ The `beatPulse` method takes the game state and returns a function that goes
 from Form -> Form.
 The input is the playing field. The output is either the same or the pulsating playing field.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="14:21" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="417:422" %}{% endcodesnippet %}
 
 The `pump` method calculates the value that is passed to the scale method using
 a sin function. +
@@ -219,12 +215,14 @@ between -1 and 1 so we are multiplying it with
 `beatAmplitude` to specify how much the stage should shake. +
 The `beatPhase` value is used to adjust the timing so it matches with the music.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="14:21" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="87:88" %}{% endcodesnippet %}
 
 The center hole is always pulsating but it should be in sync with the rest of the
 stage during a bass sequence. For that we adjust the `makeCenterHole` function.
 Whenever there is a bass sequence the radius of the center piece should remain constant
 otherwise it should be pumping.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="14:21" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="380:397" %}{% endcodesnippet %}
 
+That was the last piece of the puzzle. Now it is time to test it out. The music should start
+playing when the game starts. The stage starts pumping after 21 around seconds.
