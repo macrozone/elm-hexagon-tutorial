@@ -10,12 +10,12 @@ import Color exposing (..)
 import Debug
 import Text
 import Audio exposing (PlaybackOptions, defaultPlaybackOptions, Sound)
+import Task exposing (Task, andThen)
 
 import String exposing (padLeft)
 
 import Html.App as App
 import Html
-import Task exposing (Task, andThen)
 
 
 -- MODEL
