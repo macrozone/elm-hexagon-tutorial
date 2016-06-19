@@ -7,8 +7,8 @@ That game was the prototype for the successful mobile game Super Hexagon.
 
 The tutorial requires some knowledge of the concept of functional programming.
 You should also have read the section about
-[the Elm architecture](http://guide.elm-lang.org/architecture/index.html). The game is building
-on it.
+http://guide.elm-lang.org/architecture/index.html[the Elm architecture]. The game is building
+up on it.
 
 It is based on Elm 0.17 which uses a different approach than 0.16. In fact we were almost done with
 the tutorial when 0.17 came out and dropped Signals in favor of Commands. So we decided to
@@ -20,7 +20,7 @@ debugger.
 While Elm is currently only compiling to Javascript this might change in the future. That's why
 it is not possible anymore to have external librarys that use native bindings such as the Web audio API.
 Until Elm core supports this we are going to have to work around this limitation (as you will
-see in chapter <<music.adoc#music,Music>>.
+see in chapter <<music.adoc#music,Music>>).
 
 The tutorial is is split up in seven chapters each with a special focus. At the end of each
 chapter you will have a running program.
