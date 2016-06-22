@@ -75,9 +75,15 @@ This function returns a `From` that contains a group of these trapezoids. Notice
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="254:255", language="elm" %}{% endcodesnippet %}
 
-Finally `makeEnemies` will create a `List(Form)` for every enemy:
+The following function `makeEnemies` will create a `List(Form)` for every enemy:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="257:260", language="elm" %}{% endcodesnippet %}
+
+Finally we add this function to our `view`-function:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="314:333", language="elm" %}{% endcodesnippet %}
+
+
 
 
 
