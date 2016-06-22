@@ -73,7 +73,7 @@ playerRadius = gameWidth / 10.0
 enemyThickness = 30
 enemyDistance = 350
 
-enemies = 
+enemies =
   [ [False, True, False, True, False, True]
   , [False, True, True, True, True, True]
   , [True, False, True, True, True, True]
@@ -93,10 +93,11 @@ beatPhase = 270 |> degrees
 -- Calculate Beat Per Minute
 bpm : Float -> Float
 bpm beat =
-  (2.0 * pi * beat / 3600 )
+  (2.0 * pi * beat / 60 )
 
-pump : Int -> Float
-pump progress = beatAmplitude * (beat * toFloat progress + beatPhase |> sin)
+pump : Float -> Float
+pump progress =
+  beatAmplitude * (beat * progress / 1000 + beatPhase |> sin)
 
 -- MUSIC
 
@@ -210,12 +211,12 @@ updateEnemies game =
     numEnemies = List.length enemies
     maxDistance = numEnemies * enemyDistance
 
-    offsetForEnemy index = 
+    offsetForEnemy index =
       round <| enemyDistance * (toFloat index) - enemyProgress
 
-    radiusFor index = 
+    radiusFor index =
       (offsetForEnemy index) % maxDistance
-      |> toFloat 
+      |> toFloat
   in
     List.indexedMap (\index parts -> {
       parts = parts,
@@ -381,9 +382,9 @@ makeCenterHole : Colors -> Game -> List Form
 makeCenterHole colors game =
   let
     bassAdd = if game.hasBass then
-        100.0 * beatAmplitude
+        0
       else
-        100.0 * beatAmplitude * (beat * 0.06* game.msRunning |> sin)
+        100.0 * (pump game.msRunning)
     shape = ngon 6 (60 + bassAdd)
     line = solid colors.bright
   in
@@ -416,8 +417,7 @@ makeTextBox size string =
 beatPulse : Game -> Form -> Form
 beatPulse game =
   if game.hasBass then
-    scale (1 + beatAmplitude * (beat * 0.06* game.msRunning |> sin))
-
+    scale (1 + (pump game.msRunning))
   else
     identity
 
