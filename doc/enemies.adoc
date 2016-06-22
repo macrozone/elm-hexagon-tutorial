@@ -1,7 +1,7 @@
 Enemies
 -------
 
-In the original game the shape of the enemies are defined in a large class and they are created in waves. For this tutorial we keep it simpler. We have some pre-defined enemie-arrangements that repeat.
+In the original game the shape of the "enemies" are defined in a large class and they are created in waves. For this tutorial we keep it simpler. We have some pre-defined enemie-arrangements that repeat.
 
 Let's first introduce a new type `Enemy`:
 
@@ -15,7 +15,9 @@ We add a list of enemies to the game state as well as `enemySpeed` which will in
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="31:45", language="elm" %}{% endcodesnippet %}
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="64:67", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="63:65", language="elm" %}{% endcodesnippet %}
 
 == Updating enemies
+
+We do want to
 
