@@ -97,7 +97,6 @@ updatePlayerAngle angle dir =
     else
       newAngle
 
-
 colidesWith: Player -> Enemy -> Bool
 colidesWith player enemy =
   let 
@@ -118,13 +117,17 @@ colidesWith player enemy =
         indexedMap (,) enemy.parts |> filter snd |> map fst |> any collidesAtIndex
 
 updatePlayer: Direction -> Game -> Player
-updatePlayer dir {player, state} =
+updatePlayer dir {player, enemies, state} =
   if state == Play then
     let
       newAngle = if state == NewGame then degrees 30
                  else updatePlayerAngle player.angle dir
+      newPlayer = { player | angle = newAngle }
     in
-      { player | angle = newAngle }
+      if any (colidesWith newPlayer) enemies then
+        player
+      else 
+        newPlayer
   else
     player
 
