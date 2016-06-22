@@ -60,3 +60,21 @@ The enemies should repeat whenever `enemyProgress` exceeds this `maxDistance`. Y
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="137:138", language="elm" %}{% endcodesnippet %}
 
 We subtract the `enemyProgress`, so that value will be negative (for most enemies). But because we take the modulo `maxDistance` of it, it will always be between 0 and `maxDistance` and will decrease for every enemy over time.
+
+== Display enemies
+
+First we need a function to create a trapezoid:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="233:240", language="elm" %}{% endcodesnippet %}
+
+We will now use this function to create a trapezoid for every occupied part of any enemy:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="243:255", language="elm" %}{% endcodesnippet %}
+
+This function returns a `From` that contains a group of these trapezoids. Notice how we filter out parts by creating a tuple of `(index:Int, part:Bool)`, removing parts where part is `False` and sending the index to `makeEnemyPart`. Pure functional magic:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="254:255", language="elm" %}{% endcodesnippet %}
+
+
+
+
