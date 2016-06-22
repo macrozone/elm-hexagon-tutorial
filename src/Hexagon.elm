@@ -13,7 +13,7 @@ import Html
 
 
 -- MODEL
-type State = NewGame | Play | GameOver | Pause | Resume
+type State = NewGame | Play | GameOver | Pause
 
 
 -- MODEL
@@ -125,8 +125,7 @@ onUserInput keyMsg game =
         NewGame -> if spacebar then Play else NewGame
         Play -> if spacebar then Pause else Play
         GameOver -> if spacebar then NewGame else GameOver
-        Pause -> if spacebar then Resume else Pause
-        _ -> game.state
+        Pause -> if spacebar then Play else Pause
   in
     ( { game | keyboardModel = keyboardModel
              , direction = direction
@@ -142,7 +141,6 @@ onFrame time game =
     nextState =
       case game.state of
         NewGame -> NewGame
-        Resume -> Play
         Play -> if isGameOver game then GameOver else Play
         _ -> game.state
   in
