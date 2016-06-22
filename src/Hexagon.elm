@@ -138,8 +138,10 @@ updateEnemies game =
     numEnemies = List.length enemies
     maxDistance = numEnemies * enemyDistance
     enemyProgress = (toFloat game.progress) * game.enemySpeed
+    offsetForEnemy index = 
+      round <| enemyDistance * (toFloat index) - enemyProgress
     radiusFor index = 
-      enemyThickness + (iHalfWidth + round ( enemyDistance * (toFloat index) - enemyProgress)) % maxDistance
+      enemyThickness + (iHalfWidth + offsetForEnemy index) % maxDistance
       |> toFloat 
   in
     List.indexedMap (\index parts -> {
