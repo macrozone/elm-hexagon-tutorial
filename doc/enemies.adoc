@@ -21,6 +21,8 @@ Our enemies are made out of trapezoids, so that they occupy 1-5 sectors of the h
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="66:77", language="elm" %}{% endcodesnippet %}
 
+You can chose whatever config you like, just make sure that you keep one side open ;-)
+
 
 == Updating enemies
 
