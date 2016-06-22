@@ -71,8 +71,20 @@ playerRadius : Float
 playerRadius = gameWidth / 10.0
 
 enemyThickness = 30
-startMessage = "SPACE to start, &larr;&rarr; to move"
+enemyDistance = 350
 
+enemies = 
+  [ [False, True, False, True, False, True]
+  , [False, True, True, True, True, True]
+  , [True, False, True, True, True, True]
+  , [True, True, True, True, False, True]
+  , [True, True, True, False, True, True]
+  , [False, True, False, True, False, True]
+  , [True, False, True, False, True, False]
+  , [True, True, True, True, True, False]
+  ]
+
+startMessage = "SPACE to start, &larr;&rarr; to move"
 
 beat = 138.0 |> bpm
 beatAmplitude = 0.06
@@ -187,27 +199,19 @@ updateAutoRotateSpeed {msRunning, autoRotateSpeed} =
   0.02 * sin (msRunning * 0.0003)
 
 
+
 updateEnemies: Game -> List(Enemy)
 updateEnemies game =
   let
-    enemyDistance = 300
-    enemies =
-      [ [False, True, False, True, False, True]
-      , [True, True, True, False, True, True]
-      , [False, True, False, True, True, True]
-      , [False, True, True, True, True, True]
-      , [True, False, True, True, True, True]
-      , [True, False, True, True, True, False]
-      , [False, False, False, True, True, True]
-      , [False, True, True, True, True, True]
-      ]
+    enemyProgress = game.msRunning * game.enemySpeed
     numEnemies = List.length enemies
     maxDistance = numEnemies * enemyDistance
-    enemyProgress = game.msRunning * game.enemySpeed
+
     offsetForEnemy index = 
       round <| enemyDistance * (toFloat index) - enemyProgress
+
     radiusFor index = 
-      enemyThickness + (iHalfWidth + offsetForEnemy index) % maxDistance
+      (offsetForEnemy index) % maxDistance
       |> toFloat 
   in
     List.indexedMap (\index parts -> {
