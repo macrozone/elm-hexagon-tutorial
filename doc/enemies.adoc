@@ -55,4 +55,8 @@ The enemies should repeat whenever `enemyProgress` exceeds this `maxDistance`. Y
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="140:142", language="elm" %}{% endcodesnippet %}
 
+`offsetForEnemy` represents the distance for a single enemy. 
 
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="137:138", language="elm" %}{% endcodesnippet %}
+
+We subtract the `enemyProgress`, so that value will be negative (for most enemies). But because we take the modulo `maxDistance` of it, it will always be between 0 and `maxDistance` and will decrease for every enemy over time.
