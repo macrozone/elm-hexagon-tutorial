@@ -43,4 +43,8 @@ Let's introduce two new functions in the `onFrame`-Function, that will update `e
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="129:148", language="elm" %}{% endcodesnippet %}
 
+The enemies will approach the player over time. We represent this as the `enemyProgress`:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="133:133", language="elm" %}{% endcodesnippet %}
+
 
