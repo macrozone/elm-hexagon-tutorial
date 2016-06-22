@@ -19,7 +19,6 @@ We also need to add new initial states for our game:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="346:365", language="elm" %}{% endcodesnippet %}
 
-
 We further define a constant values `enemyThickness` and `enemyDistance`.
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="63:65", language="elm" %}{% endcodesnippet %}
