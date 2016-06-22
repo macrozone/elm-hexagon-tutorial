@@ -30,7 +30,8 @@ As you noticed, we have only defined the `parts` property of the Enemy type yet.
 
 == Updating radius
 
-Let's introduce two new function that update `enemies` and `enemySpeed` on the game state in the `onFrame`-Function:
+
+Let's introduce two new functions in the `onFrame`-Function, that will update `enemies` and `enemySpeed` on the game state:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="178:200", language="elm" %}{% endcodesnippet %}
 
