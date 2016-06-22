@@ -51,7 +51,7 @@ As we have only a fixed set of enemies, we need them to repeat after all have pa
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="134:135", language="elm" %}{% endcodesnippet %}
 
-The enemies should repeat whenever `enemyProgress` exceeds this `maxDistance`. You see this in `radiusFor` where we calculate the radius for every enemy modulo `maxDistance`
+The enemies should repeat whenever `enemyProgress` exceeds this `maxDistance`. You see this in `radiusFor` where we calculate the radius for every enemy modulo `maxDistance`:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="140:142", language="elm" %}{% endcodesnippet %}
 
