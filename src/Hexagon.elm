@@ -62,17 +62,17 @@ playerRadius : Float
 playerRadius = gameWidth / 10.0
 
 enemyThickness = 30
-enemyDistance = 300
+enemyDistance = 350
 
 enemies = 
   [ [False, True, False, True, False, True]
-  , [True, True, True, False, True, True]
-  , [False, True, False, True, True, True]
   , [False, True, True, True, True, True]
   , [True, False, True, True, True, True]
-  , [True, False, True, True, True, False]
-  , [False, False, False, True, True, True]
-  , [False, True, True, True, True, True]
+  , [True, True, True, True, False, True]
+  , [True, True, True, False, True, True]
+  , [False, True, False, True, False, True]
+  , [True, False, True, False, True, False]
+  , [True, True, True, True, True, False]
   ]
 
 
