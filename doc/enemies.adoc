@@ -47,4 +47,6 @@ The enemies will approach the player over time. We represent this as the `enemyP
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="133:133", language="elm" %}{% endcodesnippet %}
 
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="134:135", language="elm" %}{% endcodesnippet %}
+
 
