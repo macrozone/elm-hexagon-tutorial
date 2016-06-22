@@ -102,8 +102,8 @@ updateAutoRotateAngle {autoRotateAngle, autoRotateSpeed} =
   autoRotateAngle + autoRotateSpeed
 
 updateAutoRotateSpeed: Game -> Float
-updateAutoRotateSpeed {progress, autoRotateSpeed} =
-  0.02 * sin (toFloat progress * 0.005 |> Debug.log "φ")
+updateAutoRotateSpeed {msRunning, autoRotateSpeed} =
+  0.02 * sin (msRunning * 0.0003 |> Debug.log "φ")
   |> Debug.log "autoRotateSpeed"
 
 
@@ -226,10 +226,10 @@ makeCenterHole colors game =
         |> rotate (degrees 90)
     ]
 
-makeColors : Int -> Colors
-makeColors progress =
+makeColors : Float -> Colors
+makeColors msRunning =
   let
-    hue = degrees 0.1 * (toFloat <| progress % 3600)
+    hue = degrees 0.01 * (toFloat <| round msRunning % 36000)
   in
     { dark = (hsl hue 0.6 0.2)
     , medium = (hsl hue 0.6 0.3)
@@ -240,7 +240,7 @@ view : Game -> Html.Html Msg
 view game =
   let
     bg = rect gameWidth gameHeight |> filled bgBlack
-    colors = makeColors game.progress
+    colors = makeColors game.msRunning
     field = append
         [ makeField colors
         , makePlayer game.player
