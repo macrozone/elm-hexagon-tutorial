@@ -37,9 +37,9 @@ Let's introduce two new functions in the `onFrame`-Function, that will update `e
 
 `updateEnemySpeed` will slowly increase `enemySpeed` over time starting with an initial value:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="148:150", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="149:152", language="elm" %}{% endcodesnippet %}
 
-`updateEnemies` is a little bit tri
+`updateEnemies` is a little bit tricky. Let's take a look at the whole function:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="129:146", language="elm" %}{% endcodesnippet %}
 
