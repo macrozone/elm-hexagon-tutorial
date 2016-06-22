@@ -11,13 +11,18 @@ Let's first introduce a new type `Enemy`:
 * radius: the distance of the enemies to the center
 * parts: a list of true/false that indicate where the enemy has a "hole"
 
-We add a list of enemies to the game state as well as `enemySpeed` which will increase over time and define a constant value `enemyThickness`.
+We add a list of enemies to the game state as well as `enemySpeed` which will increase over time. We further define a constant values `enemyThickness` and `enemyDistance`.
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="31:45", language="elm" %}{% endcodesnippet %}
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="63:65", language="elm" %}{% endcodesnippet %}
 
+Our enemies are made out of trapezoids, so that they occupy 1-5 sectors of the hexagon. We configure one enemy with an array of booleans, where `True` indicates an occupied sector and `False` a hole. We define a fixed set of enemies:
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="66:77", language="elm" %}{% endcodesnippet %}
+
+
 == Updating enemies
 
-We do want to
+There are different approaches to generate enemies. It can be tricky as you need to keep a representation for every enemy that is currently visible on screen. You therefore have to take the size of the screen into account. 
 
