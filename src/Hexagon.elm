@@ -29,7 +29,6 @@ type alias Game =
   , direction : Direction
   , keyboardModel : Keyboard.Model
   , state : State
-  , progress : Int
   , timeStart : Time
   , timeTick : Time
   , msRunning : Float
@@ -90,12 +89,6 @@ isGameOver: Game -> Bool
 isGameOver {player} =
   False
 
-updateProgress: Game -> Int
-updateProgress {state,progress} =
-  case state of
-    NewGame -> 0
-    Play -> progress + 1
-    _ -> progress
 
 updateMsRunning: Time -> Game -> Time
 updateMsRunning timestamp game =
@@ -156,7 +149,6 @@ onFrame time game =
     ( { game |
         player = updatePlayer game.direction game
       , state = Debug.log "state" nextState
-      , progress = Debug.log "progress" (updateProgress game)
       , timeStart = if game.state == NewGame then time else game.timeStart
       , timeTick = time
       , msRunning = Debug.log "msRunning" (updateMsRunning time game)
@@ -284,7 +276,6 @@ init =
       , keyboardModel = keyboardModel
       , direction = Still
       , state = NewGame
-      , progress = 0
       , timeStart = 0.0
       , timeTick = 0.0
       , msRunning = 0.0
