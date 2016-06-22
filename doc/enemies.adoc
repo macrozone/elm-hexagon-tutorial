@@ -38,6 +38,8 @@ This part is a little bit tricky. Let's first introduce two new function that up
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="148:150", language="elm" %}{% endcodesnippet %}
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="130:146", language="elm" %}{% endcodesnippet %}
+
+
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="129:146", language="elm" %}{% endcodesnippet %}
 
 
