@@ -36,7 +36,6 @@ type alias Game =
   , enemySpeed: Float
   , keyboardModel : Keyboard.Model
   , state : State
-  , progress : Int
   , timeStart : Time
   , timeTick : Time
   , msRunning : Float
@@ -98,12 +97,6 @@ isGameOver: Game -> Bool
 isGameOver {player} =
   False
 
-updateProgress: Game -> Int
-updateProgress {state,progress} =
-  case state of
-    NewGame -> 0
-    Play -> progress + 1
-    _ -> progress
 
 updateMsRunning: Time -> Game -> Time
 updateMsRunning timestamp game =
@@ -117,8 +110,8 @@ updateAutoRotateAngle {autoRotateAngle, autoRotateSpeed} =
   autoRotateAngle + autoRotateSpeed
 
 updateAutoRotateSpeed: Game -> Float
-updateAutoRotateSpeed {progress, autoRotateSpeed} =
-  0.02 * sin (toFloat progress * 0.005 |> Debug.log "φ")
+updateAutoRotateSpeed {msRunning, autoRotateSpeed} =
+  0.02 * sin (msRunning * 0.0003 |> Debug.log "φ")
   |> Debug.log "autoRotateSpeed"
 
 updateEnemies: Game -> List(Enemy)
@@ -137,7 +130,7 @@ updateEnemies game =
       ]
     numEnemies = List.length enemies
     maxDistance = numEnemies * enemyDistance
-    enemyProgress = (toFloat game.progress) * game.enemySpeed
+    enemyProgress = game.msRunning * game.enemySpeed
     offsetForEnemy index = 
       round <| enemyDistance * (toFloat index) - enemyProgress
     radiusFor index = 
@@ -152,7 +145,7 @@ updateEnemies game =
 
 updateEnemySpeed: Game -> Float
 updateEnemySpeed game =
-  Debug.log "enemy speed" (2 + (toFloat game.progress)/1000)
+  Debug.log "enemy speed" (0.15 + game.msRunning/500000)
 
 {-| Updates the game state on a keyboard command -}
 onUserInput : Keyboard.Msg -> Game -> (Game, Cmd Msg)
@@ -196,7 +189,6 @@ onFrame time game =
       , enemies = updateEnemies game
       , enemySpeed = updateEnemySpeed game
       , state = Debug.log "state" nextState
-      , progress = Debug.log "progress" (updateProgress game)
       , timeStart = if game.state == NewGame then time else game.timeStart
       , timeTick = time
       , msRunning = Debug.log "msRunning" (updateMsRunning time game)
@@ -306,10 +298,10 @@ makeCenterHole colors game =
         |> rotate (degrees 90)
     ]
 
-makeColors : Int -> Colors
-makeColors progress =
+makeColors : Float -> Colors
+makeColors msRunning =
   let
-    hue = degrees 0.1 * (toFloat <| progress % 3600)
+    hue = degrees 0.01 * (toFloat <| round msRunning % 36000)
   in
     { dark = (hsl hue 0.6 0.2)
     , medium = (hsl hue 0.6 0.3)
@@ -320,7 +312,7 @@ view : Game -> Html.Html Msg
 view game =
   let
     bg = rect gameWidth gameHeight |> filled bgBlack
-    colors = makeColors game.progress
+    colors = makeColors game.msRunning
     field = append
         [ makeField colors
         , makePlayer game.player
@@ -359,7 +351,6 @@ init =
       , state = NewGame
       , enemies = []
       , enemySpeed = 0.0
-      , progress = 0
       , timeStart = 0.0
       , timeTick = 0.0
       , msRunning = 0.0
