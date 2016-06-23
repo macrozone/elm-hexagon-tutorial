@@ -109,13 +109,13 @@ updatePlayerAngle angle dir =
 
 colidesWith: Player -> Enemy -> Bool
 colidesWith player enemy =
-  let 
+  let
     collidesAtIndex: Int -> Bool
-    collidesAtIndex index = 
-      let 
+    collidesAtIndex index =
+      let
         fromAngle = (toFloat index) * 60
-        toAngle = ((toFloat index)+1)*60
-        playerDegrees = player.angle * 360 / (2*pi)
+        toAngle = ((toFloat index) + 1) * 60
+        playerDegrees = player.angle * 360 / (2 * pi)
       in
         playerDegrees >= fromAngle && playerDegrees < toAngle
   in
@@ -123,8 +123,8 @@ colidesWith player enemy =
       False
     else
       -- check if open
-
         indexedMap (,) enemy.parts |> filter snd |> map fst |> any collidesAtIndex
+
 
 updatePlayer: Direction -> Game -> Player
 updatePlayer dir {player, enemies, state} =
@@ -132,12 +132,8 @@ updatePlayer dir {player, enemies, state} =
     let
       newAngle = if state == NewGame then degrees 30
                  else updatePlayerAngle player.angle dir
-      newPlayer = { player | angle = newAngle }
     in
-      if any (colidesWith newPlayer) enemies then
-        player
-      else 
-        newPlayer
+      { player | angle = newAngle }
   else
     player
 
@@ -160,8 +156,7 @@ updateAutoRotateAngle {autoRotateAngle, autoRotateSpeed} =
 
 updateAutoRotateSpeed: Game -> Float
 updateAutoRotateSpeed {msRunning, autoRotateSpeed} =
-  0.02 * sin (msRunning * 0.0003 |> Debug.log "φ")
-  |> Debug.log "autoRotateSpeed"
+  0.02 * sin (msRunning * 0.0003)
 
 
 updateEnemies: Game -> List(Enemy)
@@ -230,10 +225,10 @@ onFrame time game =
         player = updatePlayer game.direction game
       , enemies = updateEnemies game
       , enemySpeed = updateEnemySpeed game
-      , state = Debug.log "state" nextState
+      , state = nextState
       , timeStart = if game.state == NewGame then time else game.timeStart
       , timeTick = time
-      , msRunning = Debug.log "msRunning" (updateMsRunning time game)
+      , msRunning = updateMsRunning time game
       , autoRotateAngle = updateAutoRotateAngle game
       , autoRotateSpeed = updateAutoRotateSpeed game
     }, nextCmd )
