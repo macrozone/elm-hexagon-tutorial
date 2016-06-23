@@ -230,7 +230,7 @@ makeCenterHole colors game =
 makeColors : Float -> Colors
 makeColors msRunning =
   let
-    hue = degrees 0.01 * (toFloat <| round msRunning % 36000)
+    hue = 0.00005 * msRunning
   in
     { dark = (hsl hue 0.6 0.2)
     , medium = (hsl hue 0.6 0.3)
