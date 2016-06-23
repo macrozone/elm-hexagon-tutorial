@@ -182,8 +182,13 @@ updatePlayer dir {player, enemies, state} =
     let
       newAngle = if state == NewGame then degrees 30
                  else updatePlayerAngle player.angle dir
+      newPlayer = { player | angle = newAngle }
     in
-      { player | angle = newAngle }
+      -- stop rotating if there is an enemy passing the ship
+      if any (colidesWith newPlayer) enemies then
+        player
+      else
+        newPlayer
   else
     player
 
