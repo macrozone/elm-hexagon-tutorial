@@ -61,10 +61,15 @@ type Msg
 playerRadius : Float
 playerRadius = gameWidth / 10.0
 
+playerSpeed : Float
+playerSpeed = 0.12
+
 enemyThickness = 30
 enemyDistance = 350
+enemyInitialSpeed = 0.25
+enemyAcceleration = 0.000002
 
-enemies = 
+enemies =
   [ [False, True, False, True, False, True]
   , [False, True, True, True, True, True]
   , [True, False, True, True, True, True]
@@ -76,6 +81,11 @@ enemies =
   ]
 
 
+bgBlack : Color
+bgBlack =
+  rgb 20 20 20
+
+
 -- UPDATE
 
 updatePlayerAngle: Float -> Direction -> Float
@@ -85,7 +95,7 @@ updatePlayerAngle angle dir =
       if dir == Left then 1
       else if dir == Right then -1
       else 0
-    newAngle = (angle + toFloat (sign * 4) * 0.032)
+    newAngle = angle + toFloat sign * playerSpeed
   in
     if newAngle < 0 then
       newAngle + 2 * pi
@@ -134,22 +144,23 @@ updateEnemies game =
     numEnemies = List.length enemies
     maxDistance = numEnemies * enemyDistance
 
-    offsetForEnemy index = 
+    offsetForEnemy index =
       round <| enemyDistance * (toFloat index) - enemyProgress
 
-    radiusFor index = 
+    radiusFor index =
       (offsetForEnemy index) % maxDistance
-      |> toFloat 
+      |> toFloat
   in
     List.indexedMap (\index parts -> {
-      parts = parts, 
+      parts = parts,
       radius = radiusFor index
     }) enemies
 
 
 updateEnemySpeed: Game -> Float
 updateEnemySpeed game =
-  Debug.log "enemy speed" (0.15 + game.msRunning/500000)
+  Debug.log "enemy speed" (enemyInitialSpeed + game.msRunning * enemyAcceleration)
+
 
 {-| Updates the game state on a keyboard command -}
 onUserInput : Keyboard.Msg -> Game -> (Game, Cmd Msg)
@@ -212,10 +223,6 @@ update msg game =
 
 -- VIEW
 
-bgBlack : Color
-bgBlack =
-  rgb 20 20 20
-
 moveRadial : Float -> Float -> Form -> Form
 moveRadial angle radius =
   move (radius * cos angle, radius * sin angle)
@@ -256,9 +263,8 @@ makeEnemy color enemy =
       (indexedMap (,) enemy.parts |> filter snd |> map fst |> map makeEnemyPart)
 
 makeEnemies : Color -> List(Enemy) -> List(Form)
-makeEnemies color enemys =
-  map (makeEnemy color) enemys
-
+makeEnemies color enemies =
+  map (makeEnemy color) enemies
 
 
 hexagonElement: Int -> List((Float, Float))
@@ -305,7 +311,7 @@ makeCenterHole colors game =
 makeColors : Float -> Colors
 makeColors msRunning =
   let
-    hue = degrees 0.01 * (toFloat <| round msRunning % 36000)
+    hue = 0.00005 * msRunning
   in
     { dark = (hsl hue 0.6 0.2)
     , medium = (hsl hue 0.6 0.3)
