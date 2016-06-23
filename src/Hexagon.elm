@@ -54,6 +54,13 @@ type Msg
 playerRadius : Float
 playerRadius = gameWidth / 10.0
 
+playerSpeed : Float
+playerSpeed = 0.12
+
+bgBlack : Color
+bgBlack =
+  rgb 20 20 20
+
 
 
 -- UPDATE
@@ -65,7 +72,7 @@ updatePlayerAngle angle dir =
       if dir == Left then 1
       else if dir == Right then -1
       else 0
-    newAngle = (angle + toFloat (sign * 4) * 0.032)
+    newAngle = angle + toFloat sign * playerSpeed
   in
     if newAngle < 0 then
       newAngle + 2 * pi
@@ -164,10 +171,6 @@ update msg game =
 
 
 -- VIEW
-
-bgBlack : Color
-bgBlack =
-  rgb 20 20 20
 
 moveRadial : Float -> Float -> Form -> Form
 moveRadial angle radius =
