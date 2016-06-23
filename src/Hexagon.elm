@@ -72,6 +72,8 @@ playerRadius = gameWidth / 10.0
 
 enemyThickness = 30
 enemyDistance = 350
+enemyInitialSpeed = 0.15
+enemyAcceleration = 0.000002
 
 enemies =
   [ [False, True, False, True, False, True]
@@ -163,8 +165,7 @@ colidesWith player enemy =
       False
     else
       -- check if open
-
-        indexedMap (,) enemy.parts |> filter snd |> map fst |> any collidesAtIndex
+      indexedMap (,) enemy.parts |> filter snd |> map fst |> any collidesAtIndex
 
 updatePlayer: Direction -> Game -> Player
 updatePlayer dir {player, enemies, state} =
@@ -172,12 +173,8 @@ updatePlayer dir {player, enemies, state} =
     let
       newAngle = if state == NewGame then degrees 30
                  else updatePlayerAngle player.angle dir
-      newPlayer = { player | angle = newAngle }
     in
-      if any (colidesWith newPlayer) enemies then
-        player
-      else 
-        newPlayer
+      { player | angle = newAngle }
   else
     player
 
@@ -203,7 +200,6 @@ updateAutoRotateSpeed {msRunning, autoRotateSpeed} =
   0.02 * sin (msRunning * 0.0003)
 
 
-
 updateEnemies: Game -> List(Enemy)
 updateEnemies game =
   let
@@ -226,7 +222,7 @@ updateEnemies game =
 
 updateEnemySpeed: Game -> Float
 updateEnemySpeed game =
-  0.15 + game.msRunning/500000
+  enemyInitialSpeed + game.msRunning * enemyAcceleration
 
 {-| Updates the game state on a keyboard command -}
 onUserInput : Keyboard.Msg -> Game -> (Game, Cmd Msg)
@@ -381,10 +377,9 @@ makeField colors =
 makeCenterHole : Colors -> Game -> List Form
 makeCenterHole colors game =
   let
-    bassAdd = if game.hasBass then
-        0
-      else
-        100.0 * (pump game.msRunning)
+    bassAdd =
+      if game.hasBass then 0
+      else 100.0 * (pump game.msRunning)
     shape = ngon 6 (60 + bassAdd)
     line = solid colors.bright
   in
@@ -399,7 +394,7 @@ makeCenterHole colors game =
 makeColors : Float -> Colors
 makeColors msRunning =
   let
-    hue = degrees 0.01 * (toFloat <| round msRunning % 36000)
+    hue = 0.00005 * msRunning
   in
     { dark = (hsl hue 0.6 0.2)
     , medium = (hsl hue 0.6 0.3)
