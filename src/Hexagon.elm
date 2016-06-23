@@ -161,7 +161,7 @@ updateEnemies game =
 
 updateEnemySpeed: Game -> Float
 updateEnemySpeed game =
-  Debug.log "enemy speed" (enemyInitialSpeed + game.msRunning * enemyAcceleration)
+  enemyInitialSpeed + game.msRunning * enemyAcceleration
 
 
 {-| Updates the game state on a keyboard command -}
