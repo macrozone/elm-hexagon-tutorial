@@ -70,9 +70,12 @@ type alias Colors =
 playerRadius : Float
 playerRadius = gameWidth / 10.0
 
+playerSpeed : Float
+playerSpeed = 0.12
+
 enemyThickness = 30
 enemyDistance = 350
-enemyInitialSpeed = 0.15
+enemyInitialSpeed = 0.25
 enemyAcceleration = 0.000002
 
 enemies =
@@ -131,6 +134,11 @@ stopSound sound =
 
 
 
+bgBlack : Color
+bgBlack =
+  rgb 20 20 20
+
+
 -- UPDATE
 
 updatePlayerAngle: Float -> Direction -> Float
@@ -140,7 +148,7 @@ updatePlayerAngle angle dir =
       if dir == Left then 1
       else if dir == Right then -1
       else 0
-    newAngle = (angle + toFloat (sign * 4) * 0.032)
+    newAngle = angle + toFloat sign * playerSpeed
   in
     if newAngle < 0 then
       newAngle + 2 * pi
@@ -156,8 +164,8 @@ colidesWith player enemy =
     collidesAtIndex index =
       let
         fromAngle = (toFloat index) * 60
-        toAngle = ((toFloat index)+1)*60
-        playerDegrees = player.angle * 360 / (2*pi)
+        toAngle = ((toFloat index) + 1) * 60
+        playerDegrees = player.angle * 360 / (2 * pi)
       in
         playerDegrees >= fromAngle && playerDegrees < toAngle
   in
@@ -166,6 +174,7 @@ colidesWith player enemy =
     else
       -- check if open
       indexedMap (,) enemy.parts |> filter snd |> map fst |> any collidesAtIndex
+
 
 updatePlayer: Direction -> Game -> Player
 updatePlayer dir {player, enemies, state} =
@@ -223,6 +232,7 @@ updateEnemies game =
 updateEnemySpeed: Game -> Float
 updateEnemySpeed game =
   enemyInitialSpeed + game.msRunning * enemyAcceleration
+
 
 {-| Updates the game state on a keyboard command -}
 onUserInput : Keyboard.Msg -> Game -> (Game, Cmd Msg)
@@ -298,10 +308,6 @@ update msg game =
 
 -- VIEW
 
-bgBlack : Color
-bgBlack =
-  rgb 20 20 20
-
 moveRadial : Float -> Float -> Form -> Form
 moveRadial angle radius =
   move (radius * cos angle, radius * sin angle)
@@ -342,9 +348,8 @@ makeEnemy color enemy =
       (indexedMap (,) enemy.parts |> filter snd |> map fst |> map makeEnemyPart)
 
 makeEnemies : Color -> List(Enemy) -> List(Form)
-makeEnemies color enemys =
-  map (makeEnemy color) enemys
-
+makeEnemies color enemies =
+  map (makeEnemy color) enemies
 
 
 hexagonElement: Int -> List((Float, Float))
