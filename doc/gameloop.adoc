@@ -23,9 +23,9 @@ Also `onUserInput` needs some modifications to fetch the space-key and update th
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="100:125", language="elm" %}{% endcodesnippet %}
 
-== Update times 
+== Update times
 
-The function `onFrame` procs on every animation frame. We add the timing-update behaviors there:
+The function `onFrame` is called on every animation frame event (60 times a second). We add the timing-update behaviors there:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="126:145", language="elm" %}{% endcodesnippet %}
 
@@ -34,10 +34,11 @@ with some additional functions:
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="81:93", language="elm" %}{% endcodesnippet %}
 
 
-== Initialisation
+== Initialization
 
 We need to update our initialisation-function as well to define some default-values for our new states:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="200:219", language="elm" %}{% endcodesnippet %}
 
-Because we do not see the game-progress or the times anywhere, we added some Debug-functions. You should see some logs in your browser's console when you run the game.
+Because we do not see the game progress or the times anywhere, we added some Debug functions.
+You should see the logs in your browser's console when you run the game.
