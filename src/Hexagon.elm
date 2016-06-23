@@ -46,6 +46,10 @@ type Msg
 playerRadius : Float
 playerRadius = gameWidth / 10.0
 
+bgBlack : Color
+bgBlack =
+  rgb 20 20 20
+
 
 
 -- UPDATE
@@ -144,10 +148,6 @@ update msg game =
 
 
 -- VIEW
-
-bgBlack : Color
-bgBlack =
-  rgb 20 20 20
 
 moveRadial : Float -> Float -> Form -> Form
 moveRadial angle radius =
