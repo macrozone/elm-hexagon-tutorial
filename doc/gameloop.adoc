@@ -15,7 +15,7 @@ Additionally we'll introduce a timer that counts the milliseconds that the playe
 
 == Pause / Play
 
-Because the player should only be able to move on the `Play`-`State` we change the updatePlayer slightly:
+Because the player should only be able to move on the `Play`-`State` feature, we change the updatePlayer slightly:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="70:71", language="elm" %}{% endcodesnippet %}
 
@@ -36,9 +36,9 @@ with some additional functions:
 
 == Initialization
 
-We need to update our initialisation-function as well to define some default-values for our new states:
+We need to update our initialization-function as well to define default-values for our new states:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="200:219", language="elm" %}{% endcodesnippet %}
 
-Because we do not see the game progress or the times anywhere, we added some Debug functions.
+Because we do not see the game progress or the times, we added some Debug functions.
 You should see the logs in your browser's console when you run the game.
