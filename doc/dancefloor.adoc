@@ -2,7 +2,7 @@ The Scene
 ---------
 
 The board is made out of six triangles that touch in the center. They are alternating dark and light.
-The whole scene is going to rotate around the center point as well.
+The whole scene will rotate around the center point as well.
 
 ## Imports
 We need the List module.
@@ -12,7 +12,7 @@ We need the List module.
 ## Models
 First, we define the colors for the game in the model section. They are defined in the HSL color
 model (Hue, Saturation, Luminance). This is because all colors use the same hue
-and saturation values. They only differ in the luminance levels.
+and saturation values. They only differ in their luminance levels.
 The three colors are "dark", "medium" and "light". Notice that the color values are not
 defined yet. This is done dynamically in the view section.
 
@@ -30,10 +30,10 @@ and `autoRotateSpeed` to the Game type and the initial game object:
 
 ## Creating the board
 The board is made of two elements: Six triangles in alternating dark and bright
-color and a center hexagon.
+colors and a center hexagon.
 
 First, we create the function that calculates the color values. It takes the progress
-as an input and returns a `Colors` object which contains the values for the three colors.
+as an input and returns a `Colors` object that contains the values for the three colors.
 
 // makeColors
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="237:245" %}{% endcodesnippet %}
@@ -45,7 +45,8 @@ Its length is $$\sqrt2$$ * screen width. This way the triangles always cover the
 field.
 
 The field itself consists of a group of Forms. Firstly we define two helper
-functions: `color` returns alternating `dark` or `medium`.
+functions: 
+`color` returns alternating `dark` or `medium`.
 `poly` creates a filled polygon from the triangle points and the color.
 
 Then we create an array of
