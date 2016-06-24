@@ -1,7 +1,7 @@
 Enemies
 -------
 
-In the original game the shape of the "enemies" are defined in a large class and they are created in waves. For this tutorial we keep it simpler. We have some pre-defined enemie-arrangements that repeat.
+In the original game the shape of the "enemies" are defined in a large class and they are created in waves. For this tutorial we keep it simpler. We have some pre-defined enemy-arrangements that repeat themselves.
 
 Let's first introduce a new type `Enemy`:
 
@@ -27,15 +27,15 @@ Our enemies are made out of trapezoids, so that they occupy 1-5 sectors of the h
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="66:77", language="elm" %}{% endcodesnippet %}
 
-You can chose whatever config you like, just make sure that you keep one side open ;-)
+You can chose whatever configuration you like, just make sure that you keep one side open ;-)
 
-As you noticed, we have only defined the `parts` property of the Enemy type yet. The radius will represent the distance to the center (and therefore to the player) and we will calculate it in the update-function.
+As you may have noticed, we have only defined the `parts` property of the Enemy type so far. The radius will represent the distance to the center (and therefore to the player) and we will calculate it in the update-function.
 
 
 == Updating radius
 
 
-Let's introduce two new functions in the `onFrame`-Function, that will update `enemies` and `enemySpeed` on the game state:
+Let's introduce two new functions in the `onFrame`-Function that will update `enemies` and `enemySpeed` on the game state:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="178:200", language="elm" %}{% endcodesnippet %}
 
