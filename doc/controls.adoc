@@ -8,13 +8,13 @@ which provides a model that holds the current state of the keyboard.
 
 == Model
 
-We first set up the model for the `Game` which contains the `Player` with the position
-(represented by an angle), the current 'direction' in which the player is moving and a `keyboardModel`:
+We first set up the model for the `Game`, which contains the `Player` with the Player's position
+(represented by an angle), the current 'direction' in which the player is moving, and a `keyboardModel`:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="1:25", language="elm" %}{% endcodesnippet %}
 
-Elm 0.17 does not use signals anymore. Instead we use a publication/subscription-pattern that uses messages.
-We declare the type of the message here which can be one of the following:
+Elm 0.17 does not use Signals anymore. Instead we use a publication/subscription-pattern that uses messages.
+We need to declare the type of the message here, which can be one of the following:
 
 * a `Step` with a timestamp. This represents a frame of the game-loop.
 * a `KeyboardExtraMsg` which is a keyboard-input
