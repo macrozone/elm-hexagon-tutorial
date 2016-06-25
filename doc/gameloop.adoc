@@ -31,7 +31,7 @@ The function `onFrame` is called on every animation frame event (60 times a seco
 
 with some additional functions:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="81:93", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="86:98", language="elm" %}{% endcodesnippet %}
 
 
 == Initialization
