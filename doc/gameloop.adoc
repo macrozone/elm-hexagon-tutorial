@@ -11,7 +11,7 @@ We'll need some of theses states later.
 
 Additionally we'll introduce a timer that counts the milliseconds that the player has played so far. We add this to the `Game`-type:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="26:35", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="26:36", language="elm" %}{% endcodesnippet %}
 
 == Pause / Play
 
