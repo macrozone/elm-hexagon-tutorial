@@ -36,7 +36,7 @@ First, we create the function that calculates the color values. It takes the pro
 as an input and returns a `Colors` object that contains the values for the three colors.
 
 // makeColors
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="237:245" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="230:239" %}{% endcodesnippet %}
 
 A triangle is defined by its three corner points. Each point is a tuple of floats.
 One point in every triangle is the center point (0, 0). The other two points are
