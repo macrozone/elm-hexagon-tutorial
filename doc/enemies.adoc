@@ -25,7 +25,7 @@ We further define a constant values `enemyThickness`, `enemyDistance`, `enemyIni
 
 Our enemies are made out of trapezoids, so that they occupy 1-5 sectors of the hexagon. We configure one enemy with an array of booleans, where `True` indicates an occupied sector and `False` a hole. We define a fixed set of enemies:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="73:83", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="72:82", language="elm" %}{% endcodesnippet %}
 
 You can chose whatever configuration you like, just make sure that you keep one side open ;-)
 
