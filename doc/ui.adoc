@@ -16,7 +16,7 @@ and help text in the center of the screen.
 
 The start message is a constant and therefore defined with the models:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="67:67" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="84:84" %}{% endcodesnippet %}
 
 We need a helper function to transform the string to an `Element` type. The function is going to format
 the text as well. The first argument of the function is the font size, the second argument the text
