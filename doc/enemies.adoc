@@ -69,11 +69,11 @@ We subtract the `enemyProgress`, so that value will be negative (for most enemie
 
 First we need a function to create a trapezoid:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="241:249", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="240:247", language="elm" %}{% endcodesnippet %}
 
 We will now use this function to create a trapezoid for every occupied part of any enemy:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="251:264", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="250:263", language="elm" %}{% endcodesnippet %}
 
 This function returns a `Form` that contains a group of these trapezoids. Notice how we filter out parts by creating a tuple of `(index:Int, part:Bool)`, removing parts where part is `False` and sending the index to `makeEnemyPart`. Pure functional magic:
 
