@@ -26,7 +26,7 @@ and `autoRotateSpeed` to the Game type and the initial game object:
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="26:38" %}{% endcodesnippet %}
 
 // init
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="278:295" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="271:290" %}{% endcodesnippet %}
 
 ## Creating the board
 The board is made of two elements: Six triangles in alternating dark and bright
