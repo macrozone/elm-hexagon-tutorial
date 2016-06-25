@@ -77,15 +77,15 @@ We will now use this function to create a trapezoid for every occupied part of a
 
 This function returns a `Form` that contains a group of these trapezoids. Notice how we filter out parts by creating a tuple of `(index:Int, part:Bool)`, removing parts where part is `False` and sending the index to `makeEnemyPart`. Pure functional magic:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="263:264", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="261:262", language="elm" %}{% endcodesnippet %}
 
 The following function `makeEnemies` will create a `List(Form)` for every enemy:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="266:268", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="264:266", language="elm" %}{% endcodesnippet %}
 
 Finally we add this function to our `view`-function:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="240:374", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="320:339", language="elm" %}{% endcodesnippet %}
 
 
 
