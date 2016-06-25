@@ -41,27 +41,27 @@ Let's introduce two new functions in the `onFrame`-Function that will update `en
 
 `updateEnemySpeed` will slowly increase `enemySpeed` over time starting with an initial value:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="162:165", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="160:163", language="elm" %}{% endcodesnippet %}
 
 `updateEnemies` is a little bit tricky. Let's first take a look at the whole function:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="142:160", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="140:158", language="elm" %}{% endcodesnippet %}
 
 The enemies will approach the player over time. We represent this as the `enemyProgress`:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="145:145", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="143:143", language="elm" %}{% endcodesnippet %}
 
 As we have only a fixed set of enemies, we need them to repeat after all have passed the player. We do this by defining a `maxDistance` that is the total radius of all enemies.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="146:147", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="144:145", language="elm" %}{% endcodesnippet %}
 
 The enemies should repeat whenever `enemyProgress` exceeds this `maxDistance`. You see this in `radiusFor` where we calculate the radius for every enemy modulo `maxDistance`:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="152:154", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="150:152", language="elm" %}{% endcodesnippet %}
 
 `offsetForEnemy` represents the distance for a single enemy. 
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="149:150", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="147:148", language="elm" %}{% endcodesnippet %}
 
 We subtract the `enemyProgress`, so that value will be negative (for most enemies). But because we take the modulo `maxDistance` of it, it will always be between 0 and `maxDistance` and will decrease for every enemy over time.
 
