@@ -37,31 +37,31 @@ As you may have noticed, we have only defined the `parts` property of the Enemy 
 
 Let's introduce two new functions in the `onFrame`-Function that will update `enemies` and `enemySpeed` on the game state:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="178:200", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="194:214", language="elm" %}{% endcodesnippet %}
 
 `updateEnemySpeed` will slowly increase `enemySpeed` over time starting with an initial value:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="149:152", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="162:165", language="elm" %}{% endcodesnippet %}
 
 `updateEnemies` is a little bit tricky. Let's first take a look at the whole function:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="129:148", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="142:160", language="elm" %}{% endcodesnippet %}
 
 The enemies will approach the player over time. We represent this as the `enemyProgress`:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="133:133", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="145:145", language="elm" %}{% endcodesnippet %}
 
 As we have only a fixed set of enemies, we need them to repeat after all have passed the player. We do this by defining a `maxDistance` that is the total radius of all enemies.
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="134:135", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="146:147", language="elm" %}{% endcodesnippet %}
 
 The enemies should repeat whenever `enemyProgress` exceeds this `maxDistance`. You see this in `radiusFor` where we calculate the radius for every enemy modulo `maxDistance`:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="140:142", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="152:154", language="elm" %}{% endcodesnippet %}
 
 `offsetForEnemy` represents the distance for a single enemy. 
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="137:138", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="149:150", language="elm" %}{% endcodesnippet %}
 
 We subtract the `enemyProgress`, so that value will be negative (for most enemies). But because we take the modulo `maxDistance` of it, it will always be between 0 and `maxDistance` and will decrease for every enemy over time.
 
@@ -69,23 +69,23 @@ We subtract the `enemyProgress`, so that value will be negative (for most enemie
 
 First we need a function to create a trapezoid:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="233:240", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="241:249", language="elm" %}{% endcodesnippet %}
 
 We will now use this function to create a trapezoid for every occupied part of any enemy:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="243:255", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="251:264", language="elm" %}{% endcodesnippet %}
 
-This function returns a `From` that contains a group of these trapezoids. Notice how we filter out parts by creating a tuple of `(index:Int, part:Bool)`, removing parts where part is `False` and sending the index to `makeEnemyPart`. Pure functional magic:
+This function returns a `Form` that contains a group of these trapezoids. Notice how we filter out parts by creating a tuple of `(index:Int, part:Bool)`, removing parts where part is `False` and sending the index to `makeEnemyPart`. Pure functional magic:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="254:255", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="263:264", language="elm" %}{% endcodesnippet %}
 
 The following function `makeEnemies` will create a `List(Form)` for every enemy:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="257:260", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="266:268", language="elm" %}{% endcodesnippet %}
 
 Finally we add this function to our `view`-function:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="314:333", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="240:374", language="elm" %}{% endcodesnippet %}
 
 
 
