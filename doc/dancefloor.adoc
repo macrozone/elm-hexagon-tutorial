@@ -55,19 +55,19 @@ six elements (`[0..5]`) and use `map` to create the polygons using the helper fu
 The following functions are placed in the view section:
 
 // hexagonElement, makeField
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="196:220" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="189:214" %}{% endcodesnippet %}
 
 The center element is a hexagon that has a dark fill color and a light outline.
 
 // makeCenterHole
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="223:235" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="216:228" %}{% endcodesnippet %}
 
 
 Now we can draw the element. We define the new colors in the let block of the view function.
 Then we can add the new elements and pass the whole group to a (yet empty) rotate function.
 
 // view
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="247:264" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="240:257" %}{% endcodesnippet %}
 
 
 ## Adding Rotation
@@ -86,7 +86,7 @@ The two functions `updateAutoRotateAngle` and `updateAutoRotateSpeed` take care
 of this:
 
 // updateAutoRotateAngle, updateAutoRotateSpeed
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="107:114" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="107:116" %}{% endcodesnippet %}
 
 the functions are called during the update cycle in the `onFrame` method:
 
