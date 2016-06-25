@@ -36,7 +36,7 @@ The clock should display the time in steps of 1/100th of a second. We therefore 
 The `padLeft` method pads the number with zeroes.
 
 // formatTime
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="328:335" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="329:337" %}{% endcodesnippet %}
 
 
 The view function is now extended to use the UI elements.
