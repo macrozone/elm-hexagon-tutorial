@@ -17,17 +17,17 @@ Additionally we'll introduce a timer that counts the milliseconds that the playe
 
 Because the player should only be able to move on the `Play`-`State` feature, we change the updatePlayer slightly:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="70:71", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="76:86", language="elm" %}{% endcodesnippet %}
 
-Also `onUserInput` needs some modifications to fetch the space-key and update the game-state accordingly:
+`onUserInput` needs also some modifications to fetch the space-key and update the game-state accordingly:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="100:125", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="100:124", language="elm" %}{% endcodesnippet %}
 
 == Update times
 
 The function `onFrame` is called on every animation frame event (60 times a second). We add the timing-update behaviors there:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="126:145", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="126:143", language="elm" %}{% endcodesnippet %}
 
 with some additional functions:
 
