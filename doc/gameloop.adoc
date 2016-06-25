@@ -40,5 +40,5 @@ We need to update our initialization-function as well to define default-values f
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="194:209", language="elm" %}{% endcodesnippet %}
 
-Because we do not see the game progress or the times, we added some Debug functions.
+Because we do not see the game progress, we added some Debug functions.
 You should see the logs in your browser's console when you run the game.
