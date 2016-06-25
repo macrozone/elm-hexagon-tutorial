@@ -1,8 +1,7 @@
 Elm Game Tutorial
 -----------------
 
-Written by Simon Bächler and Marco Wettstein as a term paper in functional programming
-at the Zurich School of Engineering.
+Written by Simon Bächler and Marco Wettstein
 
 In this tutorial we are going to create a game in elm. The game is based on
 the great arcade game http://terrycavanaghgames.com/hexagon/[Hexagon].
@@ -15,7 +14,7 @@ You should also have read the section about
 http://guide.elm-lang.org/architecture/index.html[the Elm architecture]. The game is building
 up on it and uses the Model-Update-View pattern.
 
-This is an intermediate-level tutorial. The final program is about 433 lines of code.
+This is an intermediate-level tutorial. The final program is about 434 lines of code.
 
 It is based on Elm 0.17, which uses a different approach than 0.16. In fact we were almost done with
 the tutorial when 0.17 came out and dropped Signals in favor of Commands. So we decided to
