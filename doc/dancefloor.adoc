@@ -91,6 +91,6 @@ of this:
 the functions are called during the update cycle in the `onFrame` method:
 
 // onFrame
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="144:165" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="144:163" %}{% endcodesnippet %}
 
 The whole file can be seen https://github.com/macrozone/elm-hexagon-tutorial/blob/chapter/dancefloor/src/Hexagon.elm[here].
