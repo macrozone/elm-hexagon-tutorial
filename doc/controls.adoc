@@ -73,7 +73,7 @@ For this we need to construct a `subscriptions`. But let's take a look at the `m
 You'll notice that besides a `subscriptions`-function we also need an init function that defines the initial state of our application:
 
 // init
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="145:155", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="148:159", language="elm" %}{% endcodesnippet %}
 
 Finally the `subscriptions`-function will subscribe to keyboard-events and `AnimationFrame`-events:
 
