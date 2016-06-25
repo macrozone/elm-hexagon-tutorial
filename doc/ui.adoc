@@ -1,7 +1,7 @@
 UI
 --
 
-Up next are the UI elements: The text messages at the beginning and end of the game and the
+Up next are the UI elements. The text messages at the beginning and end of the game and the
 clock at the top left of the screen.
 
 We need two more imports:
@@ -21,7 +21,7 @@ The start message is a constant and therefore defined with the models:
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="84:84" %}{% endcodesnippet %}
 
 We need a helper function to transform the string to an `Element` type. The function is going to format
-the text as well. The first argument of the function is the font size, the second argument the text
+the text as well. The first argument of the function is the font size, the second argument is the text
 string.
 
 // makeTextBox
@@ -48,7 +48,7 @@ The value of the `message` box depends on the state of the game. It is either "G
 "Pause" or empty.
 
 The `toForm` method turns an `Element` into a `Form` object. That way it can be modified later on.
-In our case it is moved to the correct position on the screen.
+In this case it is moved to the correct position on the screen.
 
 // view
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="338:372" %}{% endcodesnippet %}
