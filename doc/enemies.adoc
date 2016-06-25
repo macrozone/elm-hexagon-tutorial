@@ -5,7 +5,7 @@ In the original game the shape of the "enemies" are defined in a large class and
 
 Let's first introduce a new type `Enemy`:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="31:35", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="26:30", language="elm" %}{% endcodesnippet %}
 
 
 * radius: the distance of the enemies to the center
