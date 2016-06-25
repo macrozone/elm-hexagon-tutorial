@@ -52,13 +52,13 @@ The `Player` will be a small triangle that we rotate around the game's center.
 A black background will represent our game-screen. We also change the `Player`'s color depending on the angle (for fun and profit):
 
 // bgBlack, moveRadial, makePlayer
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="100:119" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="109:122" %}{% endcodesnippet %}
 
 The function `view : Game -> Html.Html Msg` is the main function of the view part of our application.
 It receives the current game-state and returns `Html`:
 
 // view
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="120:131" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="123:135" %}{% endcodesnippet %}
 
 == Wiring
 
@@ -68,7 +68,7 @@ For this we need to construct a `subscriptions`. But let's take a look at the `m
 (`main` is the starting point for every elm-application):
 
 // main
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="158:163", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="161:167", language="elm" %}{% endcodesnippet %}
 
 You'll notice that besides a `subscriptions`-function we also need an init function that defines the initial state of our application:
 
