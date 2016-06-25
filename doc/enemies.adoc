@@ -37,7 +37,7 @@ As you may have noticed, we have only defined the `parts` property of the Enemy 
 
 Let's introduce two new functions in the `onFrame`-Function that will update `enemies` and `enemySpeed` on the game state:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="194:214", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="192:213", language="elm" %}{% endcodesnippet %}
 
 `updateEnemySpeed` will slowly increase `enemySpeed` over time starting with an initial value:
 
