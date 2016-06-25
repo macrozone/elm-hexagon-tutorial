@@ -34,7 +34,7 @@ We now define how the state of the game can change over time. This state-transit
 
 `onUserInput` will set the current direction based on the arrow-keys pressed on the keyboard:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="65:80", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="72:87", language="elm" %}{% endcodesnippet %}
 
 `onFrame` on the other hand will update the game's state on the next frame:
 
