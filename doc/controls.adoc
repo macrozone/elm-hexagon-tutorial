@@ -42,7 +42,7 @@ We now define how the state of the game can change over time. This state-transit
 
 `updatePlayer` will update the player's angle depending on the direction of the Input:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="41:63", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="64:70", language="elm" %}{% endcodesnippet %}
 
 == View
 
