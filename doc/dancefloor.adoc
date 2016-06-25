@@ -17,7 +17,7 @@ The three colors are "dark", "medium" and "light". Notice that the color values 
 defined yet. This is done dynamically in the view section.
 
 // type alias Colors
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="40:44" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="39:44" %}{% endcodesnippet %}
 
 The board is going to rotate. Therefore the we add the two values `autoRotateAngle`
 and `autoRotateSpeed` to the Game type and the initial game object:
