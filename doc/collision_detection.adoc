@@ -1,4 +1,5 @@
 Collision Detection
 -------------------
 
+We do a simple collision detection where we simplyfy the shape of the enemies to sectors. We assume that the player collides with an enemy when the player's angle is inside the segment of the enemey, when enemy's inner radius is smaller than the player's radius and when the enemy's outer radius is still larger than the player's radius:
 
