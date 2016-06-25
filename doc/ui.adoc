@@ -23,7 +23,7 @@ the text as well. The first argument of the function is the font size, the secon
 string.
 
 // makeTextBox
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="320:326" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="321:327" %}{% endcodesnippet %}
 
 Another helper function is needed to display the clock. The input is a `Time` value that is
 stored in the `msRunning` field of the Game object. That value is reset to zero in the `updateMsRunning` method
