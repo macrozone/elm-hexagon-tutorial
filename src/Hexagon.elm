@@ -216,6 +216,7 @@ updateAutoRotateSpeed {msRunning, autoRotateSpeed} =
 
 
 
+
 updateEnemies: Game -> List(Enemy)
 updateEnemies game =
   let
@@ -388,10 +389,9 @@ makeField colors =
 makeCenterHole : Colors -> Game -> List Form
 makeCenterHole colors game =
   let
-    bassAdd = if game.hasBass then
-        0
-      else
-        100.0 * (pump game.msRunning)
+    bassAdd =
+      if game.hasBass then 0
+      else 100.0 * (pump game.msRunning)
     shape = ngon 6 (60 + bassAdd)
     line = solid colors.bright
   in
