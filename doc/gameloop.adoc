@@ -38,7 +38,7 @@ with some additional functions:
 
 We need to update our initialization-function as well to define default-values for our new states:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="200:219", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/game-progress/src/Hexagon.elm", lines="194:209", language="elm" %}{% endcodesnippet %}
 
 Because we do not see the game progress or the times, we added some Debug functions.
 You should see the logs in your browser's console when you run the game.
