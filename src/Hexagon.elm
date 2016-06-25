@@ -70,8 +70,13 @@ type alias Colors =
 playerRadius : Float
 playerRadius = gameWidth / 10.0
 
+playerSpeed : Float
+playerSpeed = 0.12
+
 enemyThickness = 30
 enemyDistance = 350
+enemyInitialSpeed = 0.25
+enemyAcceleration = 0.000002
 
 enemies =
   [ [False, True, False, True, False, True]
@@ -129,6 +134,11 @@ stopSound sound =
 
 
 
+bgBlack : Color
+bgBlack =
+  rgb 20 20 20
+
+
 -- UPDATE
 
 updatePlayerAngle: Float -> Direction -> Float
@@ -138,7 +148,7 @@ updatePlayerAngle angle dir =
       if dir == Left then 1
       else if dir == Right then -1
       else 0
-    newAngle = (angle + toFloat (sign * 4) * 0.032)
+    newAngle = angle + toFloat sign * playerSpeed
   in
     if newAngle < 0 then
       newAngle + 2 * pi
@@ -154,8 +164,8 @@ colidesWith player enemy =
     collidesAtIndex index =
       let
         fromAngle = (toFloat index) * 60
-        toAngle = ((toFloat index)+1)*60
-        playerDegrees = player.angle * 360 / (2*pi)
+        toAngle = ((toFloat index) + 1) * 60
+        playerDegrees = player.angle * 360 / (2 * pi)
       in
         playerDegrees >= fromAngle && playerDegrees < toAngle
   in
@@ -163,8 +173,8 @@ colidesWith player enemy =
       False
     else
       -- check if open
+      indexedMap (,) enemy.parts |> filter snd |> map fst |> any collidesAtIndex
 
-        indexedMap (,) enemy.parts |> filter snd |> map fst |> any collidesAtIndex
 
 updatePlayer: Direction -> Game -> Player
 updatePlayer dir {player, enemies, state} =
@@ -174,9 +184,10 @@ updatePlayer dir {player, enemies, state} =
                  else updatePlayerAngle player.angle dir
       newPlayer = { player | angle = newAngle }
     in
+      -- stop rotating if there is an enemy passing the ship
       if any (colidesWith newPlayer) enemies then
         player
-      else 
+      else
         newPlayer
   else
     player
@@ -204,6 +215,7 @@ updateAutoRotateSpeed {msRunning, autoRotateSpeed} =
 
 
 
+
 updateEnemies: Game -> List(Enemy)
 updateEnemies game =
   let
@@ -226,7 +238,8 @@ updateEnemies game =
 
 updateEnemySpeed: Game -> Float
 updateEnemySpeed game =
-  0.15 + game.msRunning/500000
+  enemyInitialSpeed + game.msRunning * enemyAcceleration
+
 
 {-| Updates the game state on a keyboard command -}
 onUserInput : Keyboard.Msg -> Game -> (Game, Cmd Msg)
@@ -302,10 +315,6 @@ update msg game =
 
 -- VIEW
 
-bgBlack : Color
-bgBlack =
-  rgb 20 20 20
-
 moveRadial : Float -> Float -> Form -> Form
 moveRadial angle radius =
   move (radius * cos angle, radius * sin angle)
@@ -339,16 +348,14 @@ makeEnemy color enemy =
       trapezoid base enemyThickness color
         |> rotate (degrees <| toFloat (90 + index * 60))
         |> moveRadial (degrees <| toFloat (index * 60)) (enemy.radius +enemyThickness)
-
-    -- color = (hsl (radius/100) 1 0.5)
+        
   in
     group
       (indexedMap (,) enemy.parts |> filter snd |> map fst |> map makeEnemyPart)
 
 makeEnemies : Color -> List(Enemy) -> List(Form)
-makeEnemies color enemys =
-  map (makeEnemy color) enemys
-
+makeEnemies color enemies =
+  map (makeEnemy color) enemies
 
 
 hexagonElement: Int -> List((Float, Float))
@@ -399,7 +406,7 @@ makeCenterHole colors game =
 makeColors : Float -> Colors
 makeColors msRunning =
   let
-    hue = degrees 0.01 * (toFloat <| round msRunning % 36000)
+    hue = 0.00005 * msRunning
   in
     { dark = (hsl hue 0.6 0.2)
     , medium = (hsl hue 0.6 0.3)
