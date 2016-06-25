@@ -1,4 +1,4 @@
-1Enemies
+Enemies
 -------
 
 In the original game the shape of the "enemies" are defined in a large class and they are created in waves. For this tutorial we keep it simpler. We have some pre-defined enemy-arrangements that repeat themselves.
@@ -17,7 +17,7 @@ We add a list of enemies to the game state as well as `enemySpeed` which will in
 
 We also need to add new initial states for our game:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="388:407", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="352:371", language="elm" %}{% endcodesnippet %}
 
 We further define a constant values `enemyThickness`, `enemyDistance`, `enemyInitialSpeed` and `enemyAcceleration`:
 
