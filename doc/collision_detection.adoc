@@ -5,8 +5,8 @@ We already introcuded a `isGameOver` function, but it returns always false.
 The first and only rule for __game over__ in this game is that the game is over when the player collides with any enemy.
 
 We do a simple collision detection where we simplyfy the shape of the enemies to sectors.
-We assume that the player collides with an enemy when the player's angle is inside the segment of the enemey,
-when enemy's inner radius is smaller than the player's radius and when the enemy's outer radius is still
+
+We assume that the player collides with an enemy if the player's angle is inside the segment of the enemey, if enemy's inner radius is smaller than the player's radius and if the enemy's outer radius is still
 larger than the player's radius:
 
 
