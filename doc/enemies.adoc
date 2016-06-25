@@ -21,7 +21,7 @@ We also need to add new initial states for our game:
 
 We further define a constant values `enemyThickness`, `enemyDistance`, `enemyInitialSpeed` and `enemyAcceleration`:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="68:71", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="67:70", language="elm" %}{% endcodesnippet %}
 
 Our enemies are made out of trapezoids, so that they occupy 1-5 sectors of the hexagon. We configure one enemy with an array of booleans, where `True` indicates an occupied sector and `False` a hole. We define a fixed set of enemies:
 
