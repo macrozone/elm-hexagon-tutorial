@@ -49,4 +49,4 @@ The `toForm` method turns an `Element` into a `Form` object. That way it can be 
 In our case it is moved to the correct position on the screen.
 
 // view
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="338:370" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/ui/src/Hexagon.elm", lines="338:372" %}{% endcodesnippet %}
