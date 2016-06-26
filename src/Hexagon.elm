@@ -81,7 +81,6 @@ enemies =
   , [True, True, True, True, True, False]
   ]
 
-
 bgBlack : Color
 bgBlack =
   rgb 20 20 20
