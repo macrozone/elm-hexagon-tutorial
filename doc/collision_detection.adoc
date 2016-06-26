@@ -4,9 +4,11 @@ Collision Detection
 We already introduced a `isGameOver` function, but it returns always false.
 The first and only rule for __game over__ in this game is that the game is over when the player collides with any enemy.
 
-We therefore need to write a collision detection. To keep things simple, we 
+We therefore need to write a collision detection. The enemies are composed out of trapezoids. In order to keep it simple we assume that the enemies are sectors of a circle, because that is much easier to work with.
 
-We assume that the player collides with an enemy if the player's angle is inside the segment of the enemey, if enemy's inner radius is smaller than the player's radius and if the enemy's outer radius is still
+image:withradius.png[alt=""]
+
+We assume that the player collides with an enemy if the player's angle is inside the segment of the enemey, if enemy's inner radius (R1) is smaller than the player's radius (plus it's height) and if the enemy's outer radius (R2) is still
 larger than the player's radius:
 
 
