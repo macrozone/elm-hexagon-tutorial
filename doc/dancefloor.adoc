@@ -33,7 +33,9 @@ The board is made of two elements: Six triangles in alternating dark and bright
 colors and a center hexagon.
 
 First, we create the function that calculates the color values. It takes the progress
-as an input and returns a `Colors` object that contains the values for the three colors.
+as an input and returns a `Colors` object that contains the values for the three colors. +
+`msRunning` is a `Float` and `hue` is an angle. So this function cycles through all
+the colors in the color wheel.
 
 // makeColors
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="230:239" %}{% endcodesnippet %}
@@ -41,7 +43,7 @@ as an input and returns a `Colors` object that contains the values for the three
 A triangle is defined by its three corner points. Each point is a tuple of floats.
 One point in every triangle is the center point (0, 0). The other two points are
 calculated using simple trigonometry. The radius depends on the canvas size.
-Its length is $$\sqrt2$$ * screen width. This way the triangles always cover the whole
+Its length is $$\sqrt2$$ * half screen width. This way the triangles always cover the whole
 field.
 
 The field itself consists of a group of Forms. Firstly we define two helper
@@ -64,7 +66,9 @@ The center element is a hexagon that has a dark fill color and a light outline.
 
 
 Now we can draw the element. We define the new colors in the let block of the view function.
-Then we can add the new elements and pass the whole group to a (yet empty) rotate function.
+Then we can add the new elements and pass the whole group to a (yet empty) rotate function. +
+The `makeCenterHole` function returns a list so we use `List.append` to merge the two lists in
+the view function.
 
 // view
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="240:257" %}{% endcodesnippet %}
@@ -73,7 +77,7 @@ Then we can add the new elements and pass the whole group to a (yet empty) rotat
 ## Adding Rotation
 
 Compared to the original game, the rotation in this version is much simpler. The rotation speed is
-defined with a sinus function. So it starts rotating in one direction, gets faster, then after
+defined with a sinus function. The board starts rotating in one direction, gets faster, then after
 having reached a maximum it gets slower until it rotates the other way. And so forth.
 
 To accomplish this we have to modify the angle that is passed to the `rotate` function.
@@ -83,12 +87,13 @@ That's why we added the two values `autoRotateAngle` and `autoRotateSpeed` to th
 derivate of `autoRotateAngle`.
 
 The two functions `updateAutoRotateAngle` and `updateAutoRotateSpeed` take care
-of this:
+of this. You can see the values change in the console when you add the
+`Debug.log` function. Don't forget to remove it later on.
 
 // updateAutoRotateAngle, updateAutoRotateSpeed
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="107:116" %}{% endcodesnippet %}
 
-the functions are called during the update cycle in the `onFrame` method:
+The functions are called during the update cycle in the `onFrame` method:
 
 // onFrame
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/dancefloor/src/Hexagon.elm", lines="144:163" %}{% endcodesnippet %}

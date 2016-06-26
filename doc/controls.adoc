@@ -9,26 +9,26 @@ which provides a model that holds the current state of the keyboard.
 == Model
 
 We first set up the model for the `Game`, which contains the `Player` with the Player's position
-(represented by an angle), the current 'direction' in which the player is moving, and a `keyboardModel`:
+(represented by an angle), the current `direction` in which the player is moving, and a `keyboardModel`:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="1:25", language="elm" %}{% endcodesnippet %}
 
-Elm 0.17 does not use Signals anymore. Instead we use a publication/subscription-pattern that uses messages.
+Elm 0.17 does not use Signals anymore. Instead we use a publication/subscription pattern that uses messages.
 We need to declare the type of the message here, which can be one of the following:
 
 * a `Step` with a timestamp. This represents a frame of the game-loop.
-* a `KeyboardExtraMsg` which is a keyboard-input
+* a `KeyboardExtraMsg` which is a keyboard input
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="26:30", language="elm" %}{% endcodesnippet %}
 
-We are also going to need some constant values, e.g. the screen-size and the radius of the player's periphery:
+We are also going to need some constant values, e.g. the screen size and the radius of the player's periphery:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="30:44", language="elm" %}{% endcodesnippet %}
 
 
 == Update
 
-We now define how the state of the game can change over time. This state-transition is done with the function `update : Msg -> Game -> Game`. This function will receive our `Msg` and will update the game-state accordingly. We distinguish here between `KeyboardExtraMsg` and `Step`:
+We now define how the state of the game can change over time. This state-transition is done with the function `update : Msg -> Game -> Game`. This function will receive our `Msg` and will update the game state accordingly. We distinguish here between `KeyboardExtraMsg` and `Step`:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="99:105", language="elm" %}{% endcodesnippet %}
 
@@ -36,7 +36,9 @@ We now define how the state of the game can change over time. This state-transit
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="72:87", language="elm" %}{% endcodesnippet %}
 
-`onFrame` on the other hand will update the game's state on the next frame:
+`onFrame` on the other hand will update the game's state on the next frame.
+There is currently only one `nextCmd` value which does nothing. We are going to add
+more commands later on.
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="88:97", language="elm" %}{% endcodesnippet %}
 
@@ -48,14 +50,14 @@ We now define how the state of the game can change over time. This state-transit
 
 Elm provides different libraries to output html or to render 2d-graphics on a canvas. We use the `Graphics`-Package for this.
 
-The `Player` will be a small triangle that we rotate around the game's center.
-A black background will represent our game-screen. We also change the `Player`'s color depending on the angle (for fun and profit):
+The `Player` will be a small triangle that we rotate around the center of the game.
+A black background will represent our game screen. We also change the player's color depending on the angle (for fun and profit):
 
 // bgBlack, moveRadial, makePlayer
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="109:122" %}{% endcodesnippet %}
 
 The function `view : Game -> Html.Html Msg` is the main function of the view part of our application.
-It receives the current game-state and returns `Html`:
+It receives the current game state and returns `Html`:
 
 // view
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="123:135" %}{% endcodesnippet %}

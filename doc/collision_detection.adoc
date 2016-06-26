@@ -14,7 +14,7 @@ larger than the player's radius:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/collision/src/Hexagon.elm", lines="110:127" %}{% endcodesnippet %}
 
-With this function we can extend our `isGameOver`-rule:
+With this function we can extend our `isGameOver` rule:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/collision/src/Hexagon.elm", lines="146:149" %}{% endcodesnippet %}
 

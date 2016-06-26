@@ -3,12 +3,11 @@ Enemies
 
 image:Bildschirmfoto 2016-06-26 um 15.31.42.png[alt=""]
 
-In the original game the shape of the "enemies" are defined in a large class and they are created in waves. For this tutorial we keep it simpler. We have some pre-defined enemy-arrangements that repeat themselves.
+In the original game the shape of the "enemies" is defined in a large class and they are created in waves. For this tutorial we keep it simpler. We have some predefined enemy arrangements that repeat themselves.
 
 Let's first introduce a new type `Enemy`:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="26:30", language="elm" %}{% endcodesnippet %}
-
 
 
 * radius: the distance of the enemies to the center
@@ -22,7 +21,7 @@ We also need to add new initial states for our game:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="352:371", language="elm" %}{% endcodesnippet %}
 
-We further define a constant values `enemyThickness`, `enemyDistance`, `enemyInitialSpeed` and `enemyAcceleration`:
+We further define the constant values `enemyThickness`, `enemyDistance`, `enemyInitialSpeed` and `enemyAcceleration`:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="67:70", language="elm" %}{% endcodesnippet %}
 
@@ -38,7 +37,7 @@ As you may have noticed, we have only defined the `parts` property of the Enemy 
 == Updating radius
 
 
-Let's introduce two new functions in the `onFrame`-Function that will update `enemies` and `enemySpeed` on the game state:
+Let's introduce two new functions in the `onFrame` function that will update `enemies` and `enemySpeed` on the game state:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="192:213", language="elm" %}{% endcodesnippet %}
 
@@ -72,11 +71,11 @@ We subtract the `enemyProgress`, so that value will be negative (for most enemie
 
 First we need a function to create a trapezoid:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="240:247", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="240:248" %}{% endcodesnippet %}
 
 We will now use this function to create a trapezoid for every occupied part of any enemy:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="250:263", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="250:263"  %}{% endcodesnippet %}
 
 This function returns a `Form` that contains a group of these trapezoids. Notice how we filter out parts by creating a tuple of `(index:Int, part:Bool)`, removing parts where part is `False` and sending the index to `makeEnemyPart`. Pure functional magic:
 
@@ -86,7 +85,7 @@ The following function `makeEnemies` will create a `List(Form)` for every enemy:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="264:266", language="elm" %}{% endcodesnippet %}
 
-Finally we add this function to our `view`-function:
+Finally we add this function to our `view` function:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="320:339", language="elm" %}{% endcodesnippet %}
 
