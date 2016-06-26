@@ -61,7 +61,8 @@ type alias Colors =
 
 playerRadius : Float
 playerRadius = gameWidth / 10.0
-
+playerSize: Float
+playerSize = 10.0
 playerSpeed : Float
 playerSpeed = 0.12
 
@@ -233,9 +234,9 @@ makePlayer player =
   let
     angle = player.angle - degrees 30
   in
-    ngon 3 10
+    ngon 3 playerSize
       |> filled (hsl angle 1 0.5)
-      |> moveRadial angle (playerRadius - 10)
+      |> moveRadial angle (playerRadius - playerSize)
       |> rotate angle
 
 trapezoid: Float -> Float -> Color -> Form
