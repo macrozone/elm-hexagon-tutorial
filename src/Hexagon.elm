@@ -89,7 +89,6 @@ enemies =
   , [True, False, True, False, True, False]
   , [True, True, True, True, True, False]
   ]
-
 startMessage = "SPACE to start, &larr;&rarr; to move"
 
 beat = 138.0 |> bpm
