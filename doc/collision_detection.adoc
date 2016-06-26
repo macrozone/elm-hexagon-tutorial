@@ -1,10 +1,10 @@
 Collision Detection
 -------------------
 
-We already introcuded a `isGameOver` function, but it returns always false.
+We already introduced a `isGameOver` function, but it returns always false.
 The first and only rule for __game over__ in this game is that the game is over when the player collides with any enemy.
 
-We do a simple collision detection where we simplyfy the shape of the enemies to sectors.
+We program a simple collision detection where we simplify the shape of the enemies to sectors.
 
 We assume that the player collides with an enemy if the player's angle is inside the segment of the enemey, if enemy's inner radius is smaller than the player's radius and if the enemy's outer radius is still
 larger than the player's radius:
@@ -21,8 +21,8 @@ Now we have a real game!
 == Small Gameplay Tweak
 
 In the original game you are not able to rotate into an enemy sideways.
-Without any modification, the player would be game over in our game if he would rotate into an enemy.
+Without any modification, it is game over in our version of the game if The player rotates into an enemy.
 To prevent this we update the `updatePlayer` function.
-We do not update the player's angle, if he would collide with an enemy after rotation:
+We do not update the player's angle, as he would collide with an enemy after rotation:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/collision/src/Hexagon.elm", lines="129:145" %}{% endcodesnippet %}
