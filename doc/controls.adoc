@@ -23,7 +23,7 @@ We need to declare the type of the message here, which can be one of the followi
 
 We are also going to need some constant values, e.g. the screen-size and the radius of the player's periphery:
 
-{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="30:36", language="elm" %}{% endcodesnippet %}
+{% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/controls/src/Hexagon.elm", lines="30:44", language="elm" %}{% endcodesnippet %}
 
 
 == Update
