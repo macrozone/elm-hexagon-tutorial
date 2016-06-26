@@ -119,7 +119,7 @@ colidesWith player enemy =
       in
         playerDegrees >= fromAngle && playerDegrees < toAngle
   in
-    if enemy.radius > playerRadius || enemy.radius + enemyThickness < playerRadius then
+    if enemy.radius > playerRadius || enemy.radius + enemyThickness < playerRadius-15  then
       False
     else
       -- check if open
