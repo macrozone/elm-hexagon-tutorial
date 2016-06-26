@@ -69,7 +69,8 @@ type alias Colors =
 
 playerRadius : Float
 playerRadius = gameWidth / 10.0
-
+playerSize: Float
+playerSize = 10.0
 playerSpeed : Float
 playerSpeed = 0.12
 
@@ -169,7 +170,7 @@ colidesWith player enemy =
       in
         playerDegrees >= fromAngle && playerDegrees < toAngle
   in
-    if enemy.radius > playerRadius || enemy.radius + enemyThickness < playerRadius then
+    if enemy.radius > playerRadius || enemy.radius + enemyThickness < playerRadius-playerSize*3/2  then
       False
     else
       -- check if open
@@ -325,9 +326,9 @@ makePlayer player =
   let
     angle = player.angle - degrees 30
   in
-    ngon 3 10
+    ngon 3 playerSize
       |> filled (hsl angle 1 0.5)
-      |> moveRadial angle (playerRadius - 10)
+      |> moveRadial angle (playerRadius - playerSize)
       |> rotate angle
 
 trapezoid: Float -> Float -> Color -> Form
