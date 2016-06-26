@@ -260,6 +260,7 @@ makeEnemy color enemy =
     group
       (indexedMap (,) enemy.parts |> filter snd |> map fst |> map makeEnemyPart)
 
+
 makeEnemies : Color -> List(Enemy) -> List(Form)
 makeEnemies color enemies =
   map (makeEnemy color) enemies
