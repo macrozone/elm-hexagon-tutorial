@@ -1,11 +1,14 @@
 Enemies
 -------
 
+image:Bildschirmfoto 2016-06-26 um 15.31.42.png[alt=""]
+
 In the original game the shape of the "enemies" are defined in a large class and they are created in waves. For this tutorial we keep it simpler. We have some pre-defined enemy-arrangements that repeat themselves.
 
 Let's first introduce a new type `Enemy`:
 
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/enemies/src/Hexagon.elm", lines="26:30", language="elm" %}{% endcodesnippet %}
+
 
 
 * radius: the distance of the enemies to the center
