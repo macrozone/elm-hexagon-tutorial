@@ -255,8 +255,7 @@ makeEnemy color enemy =
     makeEnemyPart index =
       trapezoid base enemyThickness color
         |> rotate (degrees <| toFloat (90 + index * 60))
-        |> moveRadial (degrees <| toFloat (index * 60)) (enemy.radius +enemyThickness)
-        
+        |> moveRadial (degrees <| toFloat (index * 60)) (enemy.radius + enemyThickness)
   in
     group
       (indexedMap (,) enemy.parts |> filter snd |> map fst |> map makeEnemyPart)
