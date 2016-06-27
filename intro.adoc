@@ -28,7 +28,7 @@ it is not possible anymore to have external libraries that use native bindings s
 Until Elm core supports this we are going to have to work around this limitation (as you will
 see in chapter <<doc/music.adoc#music,Music>>).
 
-The tutorial is is split up in seven chapters each with a special focus. By the end of each
+The tutorial is is split up in seven chapters, each with a special focus. By the end of each
 chapter you will have a running program.
 
 You can check out the full source code of each chapter:
