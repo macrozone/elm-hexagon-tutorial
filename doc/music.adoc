@@ -12,7 +12,7 @@ There is also an issue with Safari, so use a different browser for this like Goo
 ## Download the Music
 The track that we are going to use is called "Shiny Tech" by Kevin MacLeod.
 Download it here:
-http://incompetech.com/music/royalty-free/index.html?collection=12&page=1[Incompetech] 
+http://incompetech.com/music/royalty-free/index.html?collection=12&page=1[Incompetech]
 
 Rename it `shinytech.mp3` and copy it into a `src/music` folder.
 
@@ -136,7 +136,7 @@ The other states should be self-explanatory.
 
 The update method needs to handle the new states. When the `MusicLoaded` message arrives,
 the game state is set to `NewGame` and the music is stored in the model. +
-In case of an error, we add another line of programming.
+In case of an error, we throw an exception.
 
 // update
 {% codesnippet "https://raw.githubusercontent.com/macrozone/elm-hexagon-tutorial/chapter/music/src/Hexagon.elm", lines="302:314" %}{% endcodesnippet %}
