@@ -1,13 +1,13 @@
 Wrap Up
 -------
 
-That's all, folks. We hope you enjoyed writing a simple game in Elm. Feel free to optimize it and
+That's all, folks! We hope you enjoyed writing a simple game in Elm. Feel free to optimize it and
 play around with the code.
 
 Elm is still a work in progress and the API is most likely going to change. The ecosystem around
-the language should grow and tools improve.
+the language should grow and the tools improve.
 
-If you ever get stuck writing your program, you can ask for help in the Elm https://elmlang.slack.com[Slack channel].
+If you ever get stuck when writing your program, you can ask for help in the Elm https://elmlang.slack.com[Slack channel].
 There is always someone there to help.
 
 Did you like the game and want to try the proper version? It is available on
