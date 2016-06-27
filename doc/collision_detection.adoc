@@ -23,7 +23,7 @@ Now we have a real game!
 == Small Gameplay Tweak
 
 In the original game you are not able to rotate into an enemy sideways.
-Without any modification, it is game over in our version of the game if The player rotates into an enemy.
+Without any modification, it is game over in our version of the game if the player rotates into an enemy.
 To prevent this we update the `updatePlayer` function.
 We do not update the player's angle, as he would collide with an enemy after rotation:
 
