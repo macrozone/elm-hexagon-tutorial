@@ -9,10 +9,10 @@ That game was the prototype for the successful mobile game Super Hexagon.
 
 You can http://sbaechler.github.io/polygon/[check out the final result here]
 
-The tutorial requires some knowledge of the concept of functional programming.
+The tutorial requires some knowledge of the concepts of functional programming.
 You should also have read the section about
 http://guide.elm-lang.org/architecture/index.html[the Elm architecture]. The game is building
-up on it and uses the Model-Update-View pattern.
+upon this and uses the Model-Update-View pattern.
 
 This is an intermediate-level tutorial. The final program is about 434 lines of code.
 
@@ -31,7 +31,7 @@ see in chapter <<doc/music.adoc#music,Music>>).
 The tutorial is is split up in seven chapters each with a special focus. By the end of each
 chapter you will have a running program.
 
-You can check out the full source code of each chapter
+You can check out the full source code of each chapter:
 https://github.com/macrozone/elm-hexagon-tutorial/blob/chapter/controls/src/Hexagon.elm[here]. Each
 chapter has its own branch.
 
