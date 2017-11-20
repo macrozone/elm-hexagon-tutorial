@@ -1,5 +1,6 @@
 import Time exposing (..)
 import List exposing (..)
+import Tuple exposing (..)
 import AnimationFrame
 import Keyboard.Extra as Keyboard
 import Window
@@ -123,7 +124,7 @@ colidesWith player enemy =
       False
     else
       -- check if open
-      indexedMap (,) enemy.parts |> filter snd |> map fst |> any collidesAtIndex
+      indexedMap (,) enemy.parts |> filter Tuple.second |> map Tuple.first |> any collidesAtIndex
 
 
 updatePlayer: Direction -> Game -> Player
@@ -285,7 +286,7 @@ makeEnemy color enemy =
         
   in
     group
-      (indexedMap (,) enemy.parts |> filter snd |> map fst |> map makeEnemyPart)
+      (indexedMap (,) enemy.parts |> filter Tuple.second |> map Tuple.first |> map makeEnemyPart)
 
 makeEnemies : Color -> List(Enemy) -> List(Form)
 makeEnemies color enemies =
