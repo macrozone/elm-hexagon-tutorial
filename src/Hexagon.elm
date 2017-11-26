@@ -1,5 +1,6 @@
 import Time exposing (..)
 import List exposing (..)
+import Tuple exposing (..)
 import AnimationFrame
 import Keyboard.Extra as Keyboard
 import Window
@@ -258,7 +259,7 @@ makeEnemy color enemy =
         |> moveRadial (degrees <| toFloat (index * 60)) (enemy.radius + enemyThickness)
   in
     group
-      (indexedMap (,) enemy.parts |> filter snd |> map fst |> map makeEnemyPart)
+      (indexedMap (,) enemy.parts |> filter Tuple.second |> map Tuple.first |> map makeEnemyPart)
 
 
 makeEnemies : Color -> List(Enemy) -> List(Form)
