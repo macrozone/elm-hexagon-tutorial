@@ -38,15 +38,16 @@ type Direction
 
 
 type alias Enemy =
-  { radius : Float
-  , parts : List(Bool)
-  }
+    { radius : Float
+    , parts : List (Bool)
+    }
+
 
 type alias Game =
     { player : Player
     , direction : Direction
-    , enemies: List(Enemy)
-    , enemySpeed: Float
+    , enemies : List (Enemy)
+    , enemySpeed : Float
     , pressedKeys : List Key
     , state : State
     , timeStart : Time
@@ -86,23 +87,37 @@ playerSize =
 
 
 playerSpeed : Float
-playerSpeed = 0.12
+playerSpeed =
+    0.12
 
-enemyThickness = 30
-enemyDistance = 350
-enemyInitialSpeed = 0.25
-enemyAcceleration = 0.000002
+
+enemyThickness =
+    30
+
+
+enemyDistance =
+    350
+
+
+enemyInitialSpeed =
+    0.25
+
+
+enemyAcceleration =
+    0.000002
+
 
 enemies =
-  [ [False, True, False, True, False, True]
-  , [False, True, True, True, True, True]
-  , [True, False, True, True, True, True]
-  , [True, True, True, True, False, True]
-  , [True, True, True, False, True, True]
-  , [False, True, False, True, False, True]
-  , [True, False, True, False, True, False]
-  , [True, True, True, True, True, False]
-  ]
+    [ [ False, True, False, True, False, True ]
+    , [ False, True, True, True, True, True ]
+    , [ True, False, True, True, True, True ]
+    , [ True, True, True, True, False, True ]
+    , [ True, True, True, False, True, True ]
+    , [ False, True, False, True, False, True ]
+    , [ True, False, True, False, True, False ]
+    , [ True, True, True, True, True, False ]
+    ]
+
 
 bgBlack : Color
 bgBlack =
@@ -180,33 +195,43 @@ updateAutoRotateSpeed { msRunning, autoRotateSpeed } =
         |> Debug.log "autoRotateSpeed"
 
 
-updateEnemies: Game -> List(Enemy)
+updateEnemies : Game -> List (Enemy)
 updateEnemies game =
-  let
-    enemyProgress = game.msRunning * game.enemySpeed
-    numEnemies = List.length enemies
-    maxDistance = numEnemies * enemyDistance
+    let
+        enemyProgress =
+            game.msRunning * game.enemySpeed
 
-    offsetForEnemy index =
-      round <| enemyDistance * (toFloat index) - enemyProgress
+        numEnemies =
+            List.length enemies
 
-    radiusFor index =
-      (offsetForEnemy index) % maxDistance
-      |> toFloat
-  in
-    List.indexedMap (\index parts -> {
-      parts = parts,
-      radius = radiusFor index
-    }) enemies
+        maxDistance =
+            numEnemies * enemyDistance
+
+        offsetForEnemy index =
+            round <| enemyDistance * (toFloat index) - enemyProgress
+
+        radiusFor index =
+            (offsetForEnemy index)
+                % maxDistance
+                |> toFloat
+    in
+        List.indexedMap
+            (\index parts ->
+                { parts = parts
+                , radius = radiusFor index
+                }
+            )
+            enemies
 
 
-updateEnemySpeed: Game -> Float
+updateEnemySpeed : Game -> Float
 updateEnemySpeed game =
-  Debug.log "enemy speed" (enemyInitialSpeed + game.msRunning * enemyAcceleration)
+    Debug.log "enemy speed" (enemyInitialSpeed + game.msRunning * enemyAcceleration)
 
 
-{-| Updates the game state on a keyboard command -}
-onUserInput : Keyboard.Extra.Msg -> Game -> (Game, Cmd Msg)
+{-| Updates the game state on a keyboard command
+-}
+onUserInput : Keyboard.Extra.Msg -> Game -> ( Game, Cmd Msg )
 onUserInput keyMsg game =
     let
         pressedKeys =
@@ -333,33 +358,39 @@ makePlayer player =
             |> rotate angle
 
 
-trapezoid: Float -> Float -> Color -> Form
+trapezoid : Float -> Float -> Color -> Form
 trapezoid base height color =
-  let
-    s = height/(tan <| degrees 60)
-  in
-    filled color <| polygon [
-      (-base/2, 0), (base/2, 0), (base/2-s, height), (-base/2+s, height)
-    ]
+    let
+        s =
+            height / (tan <| degrees 60)
+    in
+        filled color
+            <| polygon
+                [ ( -base / 2, 0 )
+                , ( base / 2, 0 )
+                , ( base / 2 - s, height )
+                , ( -base / 2 + s, height )
+                ]
 
 
 makeEnemy : Color -> Enemy -> Form
 makeEnemy color enemy =
-  let
-    base = 2.0 * (enemy.radius +enemyThickness) / (sqrt 3)
-    makeEnemyPart : Int -> Form
-    makeEnemyPart index =
-      trapezoid base enemyThickness color
-        |> rotate (degrees <| toFloat (90 + index * 60))
-        |> moveRadial (degrees <| toFloat (index * 60)) (enemy.radius + enemyThickness)
-  in
-    group
-      (indexedMap (,) enemy.parts |> filter Tuple.second |> map Tuple.first |> map makeEnemyPart)
+    let
+        base =
+            2.0 * (enemy.radius + enemyThickness) / (sqrt 3)
+
+        makeEnemyPart : Int -> Form
+        makeEnemyPart index =
+            trapezoid base enemyThickness color
+                |> rotate (degrees <| toFloat (90 + index * 60))
+                |> moveRadial (degrees <| toFloat (index * 60)) (enemy.radius + enemyThickness)
+    in
+        group (indexedMap (,) enemy.parts |> filter Tuple.second |> map Tuple.first |> map makeEnemyPart)
 
 
-makeEnemies : Color -> List(Enemy) -> List(Form)
+makeEnemies : Color -> List (Enemy) -> List (Form)
 makeEnemies color enemies =
-  map (makeEnemy color) enemies
+    map (makeEnemy color) enemies
 
 
 hexagonElement : Int -> List ( Float, Float )
