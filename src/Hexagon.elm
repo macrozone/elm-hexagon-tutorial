@@ -210,7 +210,7 @@ makeField colors =
       polygon (hexagonElement i)
       |> filled (color i)
   in
-    group (map poly [0..5])
+     group (map poly (List.range 0 5))
 
 -- the polygon in the center: this is just decoration, so it has no own state
 makeCenterHole : Colors -> Game -> List Form
