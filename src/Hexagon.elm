@@ -1,166 +1,228 @@
+module Main exposing (..)
+
 import Time exposing (..)
 import List exposing (..)
 import AnimationFrame
-import Keyboard.Extra as Keyboard
+import Keyboard.Extra exposing (Key(..))
 import Window
 import Collage exposing (..)
 import Element exposing (..)
 import Color exposing (..)
 import Html exposing (Html)
 
+
 -- MODEL
 
-type alias Player =
-  { angle: Float }
 
-type Direction = Left | Right | Still
+type alias Player =
+    { angle : Float }
+
+
+type Direction
+    = Left
+    | Right
+    | Still
+
 
 type alias Game =
-  {
-    player : Player
-  , direction : Direction
-  , keyboardModel : Keyboard.Model
-  }
+    { player : Player
+    , direction : Direction
+    , pressedKeys : List Key
+    }
+
 
 type Msg
-  = Step Time
-  | KeyboardExtraMsg Keyboard.Msg
+    = Step Time
+    | KeyboardMsg Keyboard.Extra.Msg
 
 
-(gameWidth, gameHeight) = (1024, 576) -- 16:9
-(halfWidth, halfHeight) = (gameWidth/2, gameHeight/2)
-(iHalfWidth, iHalfHeight) = (gameWidth//2, gameHeight//2)
+( gameWidth, gameHeight ) =
+    ( 1024, 576 )
 
+
+
+-- 16:9
+
+
+( halfWidth, halfHeight ) =
+    ( gameWidth / 2, gameHeight / 2 )
+( iHalfWidth, iHalfHeight ) =
+    ( gameWidth // 2, gameHeight // 2 )
 playerRadius : Float
-playerRadius = gameWidth / 10.0
-playerSize: Float
-playerSize = 10.0
+playerRadius =
+    gameWidth / 10.0
+
+
+playerSize : Float
+playerSize =
+    10.0
+
+
 playerSpeed : Float
-playerSpeed = 0.12
+playerSpeed =
+    0.12
+
+
 bgBlack : Color
 bgBlack =
-  rgb 20 20 20
+    rgb 20 20 20
+
 
 
 -- UPDATE
 
-updatePlayerAngle: Float -> Direction -> Float
+
+updatePlayerAngle : Float -> Direction -> Float
 updatePlayerAngle angle dir =
-  let
-    sign =
-      if dir == Left then 1
-      else if dir == Right then -1
-      else 0
-    newAngle = angle + toFloat sign * playerSpeed
-  in
-    if newAngle < 0 then
-      newAngle + 2 * pi
-    else if newAngle > 2 * pi then
-      newAngle - 2 * pi
-    else
-      newAngle
+    let
+        sign =
+            if dir == Left then
+                1
+            else if dir == Right then
+                -1
+            else
+                0
 
-updatePlayer: Direction -> Game -> Player
-updatePlayer dir {player} =
-  let
-    newAngle = updatePlayerAngle player.angle dir
-  in
-    { player | angle = newAngle }
+        newAngle =
+            angle + toFloat sign * playerSpeed
+    in
+        if newAngle < 0 then
+            newAngle + 2 * pi
+        else if newAngle > 2 * pi then
+            newAngle - 2 * pi
+        else
+            newAngle
 
 
-{-| Updates the game state on a keyboard command -}
-onUserInput : Keyboard.Msg -> Game -> (Game, Cmd Msg)
+updatePlayer : Direction -> Game -> Player
+updatePlayer dir { player } =
+    let
+        newAngle =
+            updatePlayerAngle player.angle dir
+    in
+        { player | angle = newAngle }
+
+
+{-| Updates the game state on a keyboard command
+-}
+onUserInput : Keyboard.Extra.Msg -> Game -> ( Game, Cmd Msg )
 onUserInput keyMsg game =
-  let
-    ( keyboardModel, keyboardCmd ) =
-      Keyboard.update keyMsg game.keyboardModel
-    direction =
-      if (Keyboard.arrows keyboardModel).x < 0 then Left
-      else if (Keyboard.arrows keyboardModel).x > 0 then Right
-      else Still
-  in
-    ( { game | keyboardModel = keyboardModel
-             , direction = direction
-      }
-    , Cmd.map KeyboardExtraMsg keyboardCmd )
+    let
+        pressedKeys =
+            Keyboard.Extra.update keyMsg game.pressedKeys
 
-{-| Updates the game state on every frame -}
-onFrame : Time -> Game -> (Game, Cmd Msg)
+        direction =
+            if (Keyboard.Extra.arrows pressedKeys).x < 0 then
+                Left
+            else if (Keyboard.Extra.arrows pressedKeys).x > 0 then
+                Right
+            else
+                Still
+    in
+        ( { game
+            | pressedKeys = pressedKeys
+            , direction = direction
+          }
+        , Cmd.none
+        )
+
+
+{-| Updates the game state on every frame
+-}
+onFrame : Time -> Game -> ( Game, Cmd Msg )
 onFrame time game =
-  let
-    nextCmd = Cmd.none
-  in
-    ( { game |
-        player = updatePlayer game.direction game
-    }, nextCmd )
+    let
+        nextCmd =
+            Cmd.none
+    in
+        ( { game
+            | player = updatePlayer game.direction game
+          }
+        , nextCmd
+        )
 
 
-{-| Game loop: Transition from one state to the next. -}
-update : Msg -> Game -> (Game, Cmd Msg)
+{-| Game loop: Transition from one state to the next.
+-}
+update : Msg -> Game -> ( Game, Cmd Msg )
 update msg game =
-  case msg of
-    KeyboardExtraMsg keyMsg -> onUserInput keyMsg game
-    Step time -> onFrame time game
+    case msg of
+        KeyboardMsg keyMsg ->
+            onUserInput keyMsg game
+
+        Step time ->
+            onFrame time game
+
 
 
 -- VIEW
 
+
 moveRadial : Float -> Float -> Form -> Form
 moveRadial angle radius =
-  move (radius * cos angle, radius * sin angle)
+    move ( radius * cos angle, radius * sin angle )
+
 
 makePlayer : Player -> Form
 makePlayer player =
-  let
-    angle = player.angle - degrees 30
-  in
-    ngon 3 playerSize
-      |> filled (hsl angle 1 0.5)
-      |> moveRadial angle (playerRadius - playerSize)
-      |> rotate angle
+    let
+        angle =
+            player.angle - degrees 30
+    in
+        ngon 3 playerSize
+            |> filled (hsl angle 1 0.5)
+            |> moveRadial angle (playerRadius - playerSize)
+            |> rotate angle
+
 
 view : Game -> Html.Html Msg
 view game =
-  let
-    bg = rect gameWidth gameHeight |> filled bgBlack
-    field = makePlayer game.player
-  in
-    toHtml <|
-    container gameWidth gameHeight middle <|
-    collage gameWidth gameHeight
-      [ bg
-      , field
-      ]
+    let
+        bg =
+            rect gameWidth gameHeight |> filled bgBlack
+
+        field =
+            makePlayer game.player
+    in
+        toHtml
+            <| container gameWidth gameHeight middle
+            <| collage gameWidth
+                gameHeight
+                [ bg
+                , field
+                ]
+
+
 
 -- SUBSCRIPTIONS
 
+
 subscriptions : Game -> Sub Msg
 subscriptions game =
-  Sub.batch [
-    AnimationFrame.times (\time -> Step time),
-    Sub.map KeyboardExtraMsg Keyboard.subscriptions
-  ]
+    Sub.batch
+        [ AnimationFrame.times (\time -> Step time)
+        , Sub.map KeyboardMsg Keyboard.Extra.subscriptions
+        ]
+
 
 
 --INIT
 
-init : (Game, Cmd Msg)
+
+init : ( Game, Cmd Msg )
 init =
-  let
-    ( keyboardModel, keyboardCmd ) = Keyboard.init
-  in
     ( { player = Player (degrees 30)
-      , keyboardModel = keyboardModel
+      , pressedKeys = []
       , direction = Still
       }
-    , Cmd.map KeyboardExtraMsg keyboardCmd
+    , Cmd.none
     )
 
 
 main =
-  Html.program
-  { init = init
-  , update = update
-  , view = view
-  , subscriptions = subscriptions }
-
+    Html.program
+        { init = init
+        , update = update
+        , view = view
+        , subscriptions = subscriptions
+        }
