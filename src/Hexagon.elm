@@ -6,8 +6,7 @@ import Window
 import Collage exposing (..)
 import Element exposing (..)
 import Color exposing (..)
-import Html.App as App
-import Html
+import Html exposing (Html)
 
 -- MODEL
 
@@ -159,7 +158,7 @@ init =
 
 
 main =
-  App.program
+  Html.program
   { init = init
   , update = update
   , view = view
