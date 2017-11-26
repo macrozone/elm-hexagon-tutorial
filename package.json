@@ -6,6 +6,6 @@
     "setup": "elm-package install && git submodule update --init"
   },
   "dependencies": {
-    "elm": "^0.17.0"
+    "elm": "^0.18.0"
   }
 }
