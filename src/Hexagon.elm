@@ -14,12 +14,21 @@ import Debug
 import Text
 import Audio exposing (PlaybackOptions, defaultPlaybackOptions, Sound)
 import Task exposing (Task, andThen)
-
 import String exposing (padLeft)
 
 
 -- MODEL
-type State = Loading | NewGame | Starting | Play | Pausing | Pause | Resume | GameOver
+
+
+type State
+    = Loading
+    | NewGame
+    | Starting
+    | Play
+    | Pausing
+    | Pause
+    | Resume
+    | GameOver
 
 
 type alias Player =
@@ -50,8 +59,8 @@ type alias Game =
     , msRunning : Float
     , autoRotateAngle : Float
     , autoRotateSpeed : Float
-      , hasBass : Bool
-      , music: Maybe Sound
+    , hasBass : Bool
+    , music : Maybe Sound
     }
 
 
@@ -122,47 +131,85 @@ enemies =
 startMessage =
     "SPACE to start, &larr;&rarr; to move"
 
-beat = 138.0 |> bpm
-beatAmplitude = 0.06
-beatPhase = 270 |> degrees
+
+beat =
+    138.0 |> bpm
+
+
+beatAmplitude =
+    0.06
+
+
+beatPhase =
+    270 |> degrees
+
+
 
 -- Calculate Beat Per Minute
+
+
 bpm : Float -> Float
 bpm beat =
-  (2.0 * pi * beat / 60 )
+    (2.0 * pi * beat / 60)
+
 
 pump : Float -> Float
 pump progress =
-  beatAmplitude * (beat * progress / 1000 + beatPhase |> sin)
+    beatAmplitude * (beat * progress / 1000 + beatPhase |> sin)
+
+
 
 -- MUSIC
 
+
 hasBass : Time -> Bool
 hasBass time =
-  if time < 20894 then False
-  else if time < 41976 then True
-  else if time < 55672 then False
-  else if time < 67842 then True
-  else if time < 187846 then False
-  else if time < 215938 then True
-  else False
+    if time < 20894 then
+        False
+    else if time < 41976 then
+        True
+    else if time < 55672 then
+        False
+    else if time < 67842 then
+        True
+    else if time < 187846 then
+        False
+    else if time < 215938 then
+        True
+    else
+        False
 
 
 loadSound : Task String Sound
-loadSound = Audio.loadSound "music/shinytech.mp3"
+loadSound =
+    Audio.loadSound "music/shinytech.mp3"
 
 
-playbackOptions = {
-  defaultPlaybackOptions | loop = True, startAt = Nothing }
+soundLoaded : Result String Sound -> Msg
+soundLoaded result =
+    case result of
+        Ok music ->
+            MusicLoaded music
+
+        Err msg ->
+            Error msg
+
+
+playbackOptions =
+    { defaultPlaybackOptions
+        | loop = True
+        , startAt = Nothing
+    }
+
 
 playSound : Sound -> PlaybackOptions -> Cmd Msg
 playSound sound options =
-  Task.perform Error (always Noop) <| Audio.playSound options sound
+    Task.attempt (always Noop) (Audio.playSound options sound)
+
 
 stopSound : Sound -> Cmd Msg
 stopSound sound =
-  Task.perform (always Noop) (always Noop) <| Audio.stopSound sound
-
+    Task.perform (always Noop) (Audio.stopSound sound)
 
 
 bgBlack : Color
@@ -308,29 +355,58 @@ updateEnemySpeed game =
 -}
 onUserInput : Keyboard.Extra.Msg -> Game -> ( Game, Cmd Msg )
 onUserInput keyMsg game =
+    let
+        pressedKeys =
+            Keyboard.Extra.update keyMsg game.pressedKeys
 
-  let
-    pressedKeys =
-      Keyboard.Extra.update keyMsg game.pressedKeys
-    spacebar =List.member Keyboard.Extra.Space pressedKeys
-      &&not (List.memberKeyboard.Extra.Space game.pressedKeys)
-    direction =
-      if (Keyboard.Extra.arrows pressedKeys).x < 0 then Left
-      else if (Keyboard.Extra.arrows pressedKeys).x > 0 then Right
-      else Still
-    nextState =
-      case game.state of
-        NewGame -> if spacebar then Starting else NewGame
-        Play -> if spacebar then Pausing else Play
-        GameOver -> if spacebar then NewGame else GameOver
-        Pause -> if spacebar then Resume else Pause
-        _ -> game.state
-  in
-    ( { game | pressedKeys = pressedKeys
-             , direction = direction
-             , state = nextState
-      }
-    , Cmd.none )
+        spacebar =
+            List.member Keyboard.Extra.Space pressedKeys
+                && not (List.member Keyboard.Extra.Space game.pressedKeys)
+
+        direction =
+            if (Keyboard.Extra.arrows pressedKeys).x < 0 then
+                Left
+            else if (Keyboard.Extra.arrows pressedKeys).x > 0 then
+                Right
+            else
+                Still
+
+        nextState =
+            case game.state of
+                NewGame ->
+                    if spacebar then
+                        Starting
+                    else
+                        NewGame
+
+                Play ->
+                    if spacebar then
+                        Pausing
+                    else
+                        Play
+
+                GameOver ->
+                    if spacebar then
+                        NewGame
+                    else
+                        GameOver
+
+                Pause ->
+                    if spacebar then
+                        Resume
+                    else
+                        Pause
+
+                _ ->
+                    game.state
+    in
+        ( { game
+            | pressedKeys = pressedKeys
+            , direction = direction
+            , state = nextState
+          }
+        , Cmd.none
+        )
 
 
 {-| Updates the game state on every frame
@@ -338,18 +414,30 @@ onUserInput keyMsg game =
 onFrame : Time -> Game -> ( Game, Cmd Msg )
 onFrame time game =
     let
-        (nextState, nextCmd) =
-              case game.music of
-                Nothing -> (Loading, Cmd.none)
+        ( nextState, nextCmd ) =
+            case game.music of
+                Nothing ->
+                    ( Loading, Cmd.none )
+
                 Just music ->
-                  case game.state of
-                    Starting -> (Play, playSound music { playbackOptions | startAt = Just 0 })
-                    Resume -> (Play, playSound music playbackOptions)
-                    Pausing -> (Pause, stopSound music)
-                    Play -> if isGameOver game
-                      then (GameOver, stopSound music)
-                      else (Play, Cmd.none)
-                    _ -> (game.state, Cmd.none)
+                    case game.state of
+                        Starting ->
+                            ( Play, playSound music { playbackOptions | startAt = Just 0 } )
+
+                        Resume ->
+                            ( Play, playSound music playbackOptions )
+
+                        Pausing ->
+                            ( Pause, stopSound music )
+
+                        Play ->
+                            if isGameOver game then
+                                ( GameOver, stopSound music )
+                            else
+                                ( Play, Cmd.none )
+
+                        _ ->
+                            ( game.state, Cmd.none )
     in
         ( { game
             | player = updatePlayer game.direction game
@@ -383,12 +471,20 @@ update msg game =
             onFrame time game
 
         MusicLoaded music ->
-          ( { game |
-              state = NewGame,
-              music = Just music
-            }, Cmd.none)
-        Error message -> Debug.crash message
-        _ -> (game, Cmd.none)
+            ( { game
+                | state = NewGame
+                , music = Just music
+              }
+            , Cmd.none
+            )
+
+        Error message ->
+            Debug.crash message
+
+        _ ->
+            ( game, Cmd.none )
+
+
 
 -- VIEW
 
@@ -485,19 +581,26 @@ makeField colors =
 
 makeCenterHole : Colors -> Game -> List Form
 makeCenterHole colors game =
-  let
-    bassAdd =
-      if game.hasBass then 0
-      else 100.0 * (pump game.msRunning)shape = ngon 6 (60+ bassAdd)
-    line = solid colors.bright
-  in
-    [ shape
-        |> filled colors.dark
-        |> rotate (degrees 90)
-    , shape
-        |> (outlined {line | width = 4.0})
-        |> rotate (degrees 90)
-    ]
+    let
+        bassAdd =
+            if game.hasBass then
+                0
+            else
+                100.0 * (pump game.msRunning)
+
+        shape =
+            ngon 6 (60 + bassAdd)
+
+        line =
+            solid colors.bright
+    in
+        [ shape
+            |> filled colors.dark
+            |> rotate (degrees 90)
+        , shape
+            |> (outlined { line | width = 4.0 })
+            |> rotate (degrees 90)
+        ]
 
 
 makeColors : Float -> Colors
@@ -520,12 +623,14 @@ makeTextBox size string =
         |> Text.height size
         |> leftAligned
 
+
 beatPulse : Game -> Form -> Form
 beatPulse game =
-  if game.hasBass then
-    scale (1 + (pump game.msRunning))
-  else
-    identity
+    if game.hasBass then
+        scale (1 + (pump game.msRunning))
+    else
+        identity
+
 
 formatTime : Time -> String
 formatTime running =
@@ -548,35 +653,53 @@ view game =
         bg =
             rect gameWidth gameHeight |> filled bgBlack
 
-        colors = makeColors game.msRunning
-        score = formatTime game.msRunning |> makeTextBox 50
+        colors =
+            makeColors game.msRunning
 
-        message = makeTextBox 50
-          <|case game.state of
-            Loading -> "Loading..."GameOver -> "Game Over"
-            Pause -> "Pause"
-            _ -> ""
+        score =
+            formatTime game.msRunning |> makeTextBox 50
 
-        field = append
-            [ makeField colors
-            , makePlayer game.player
-            , group <| makeEnemies colors.bright game.enemies
-            ]
-            (makeCenterHole colors game)
-            |> group
-  in
-    toHtml
-    <|container gameWidth gameHeight middle
-    <|collage gameWidth gameHeight
-      [ bg
-      , field |> rotate game.autoRotateAngle|> beatPulse game
-      , toForm message |> move (0, 40)
-      , toForm score |> move (100 - halfWidth, halfHeight - 40)
-      , toForm
-          (if game.state == Play then spacer 1 1
-          else makeTextBox 20 startMessage
-        ) |> move (0, 40 - halfHeight)
-      ]
+        message =
+            makeTextBox 50
+                <| case game.state of
+                    Loading ->
+                        "Loading..."
+
+                    GameOver ->
+                        "Game Over"
+
+                    Pause ->
+                        "Pause"
+
+                    _ ->
+                        ""
+
+        field =
+            append
+                [ makeField colors
+                , makePlayer game.player
+                , group <| makeEnemies colors.bright game.enemies
+                ]
+                (makeCenterHole colors game)
+                |> group
+    in
+        toHtml
+            <| container gameWidth gameHeight middle
+            <| collage gameWidth
+                gameHeight
+                [ bg
+                , field |> rotate game.autoRotateAngle |> beatPulse game
+                , toForm message |> move ( 0, 40 )
+                , toForm score |> move ( 100 - halfWidth, halfHeight - 40 )
+                , toForm
+                    (if game.state == Play then
+                        spacer 1 1
+                     else
+                        makeTextBox 20 startMessage
+                    )
+                    |> move ( 0, 40 - halfHeight )
+                ]
+
 
 
 -- SUBSCRIPTIONS
@@ -588,6 +711,7 @@ subscriptions game =
         [ AnimationFrame.times (\time -> Step time)
         , Sub.map KeyboardMsg Keyboard.Extra.subscriptions
         ]
+
 
 
 --INIT
@@ -609,10 +733,7 @@ init =
       , hasBass = False
       , music = Nothing
       }
-    , Cmd.batch
-      [ Cmd.none
-      , Task.perform Error MusicLoaded loadSound
-      ]
+    , Task.attempt soundLoaded loadSound
     )
 
 
