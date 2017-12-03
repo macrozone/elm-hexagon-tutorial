@@ -156,8 +156,8 @@ updatePlayerAngle angle dir =
             newAngle
 
 
-colidesWith : Player -> Enemy -> Bool
-colidesWith player enemy =
+collidesWith : Player -> Enemy -> Bool
+collidesWith player enemy =
     let
         collidesAtIndex : Int -> Bool
         collidesAtIndex index =
@@ -194,7 +194,7 @@ updatePlayer dir { player, enemies, state } =
                 { player | angle = newAngle }
         in
             -- stop rotating if there is an enemy passing the ship
-            if any (colidesWith newPlayer) enemies then
+            if any (collidesWith newPlayer) enemies then
                 player
             else
                 newPlayer
@@ -204,7 +204,7 @@ updatePlayer dir { player, enemies, state } =
 
 isGameOver : Game -> Bool
 isGameOver { player, enemies } =
-    any (colidesWith player) enemies
+    any (collidesWith player) enemies
 
 
 updateMsRunning : Time -> Game -> Time
