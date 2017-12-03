@@ -38,12 +38,6 @@ type Msg
 
 ( gameWidth, gameHeight ) =
     ( 1024, 576 )
-
-
-
--- 16:9
-
-
 ( halfWidth, halfHeight ) =
     ( gameWidth / 2, gameHeight / 2 )
 ( iHalfWidth, iHalfHeight ) =
